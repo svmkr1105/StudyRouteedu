@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard – StudyRoute Admin</title>
+    <link rel="stylesheet" href="admin.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="../images/logo.png" alt="StudyRoute" />
+            <h2>StudyRoute</h2>
+        </div>
+        <a href="dashboard.html" class="nav-item active">
+            <i class="fas fa-chart-pie"></i> Dashboard
+        </a>
+        <a href="colleges.html" class="nav-item">
+            <i class="fas fa-building-columns"></i> Colleges
+        </a>
+        <a href="courses.html" class="nav-item">
+            <i class="fas fa-book-open"></i> Courses
+        </a>
+        <a href="bscc.html" class="nav-item">
+            <i class="fas fa-credit-card"></i> BSCC Courses
+        </a>
+        <a href="admissions.html" class="nav-item">
+            <i class="fas fa-pen-to-square"></i> Admissions
+        </a>
+        <a href="partners.html" class="nav-item">
+            <i class="fas fa-users"></i> Partners
+        </a>
+        <a href="feedback.html" class="nav-item">
+            <i class="fas fa-comment"></i> Feedback
+        </a>
+        <a href="content.html" class="nav-item">
+            <i class="fas fa-gear"></i> Content
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-key"></i> Change Password
+        </a>
+        <a href="index.html" class="nav-item logout" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-content">
+        <div class="header">
+            <h1>📊 Dashboard</h1>
+            <div class="user-info">
+                <span id="adminName">Admin</span>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card blue">
+                <div class="icon"><i class="fas fa-building-columns"></i></div>
+                <div class="number" id="totalColleges">0</div>
+                <div class="label">Total Colleges</div>
+            </div>
+            <div class="stat-card green">
+                <div class="icon"><i class="fas fa-book-open"></i></div>
+                <div class="number" id="totalCourses">0</div>
+                <div class="label">Total Courses</div>
+            </div>
+            <div class="stat-card purple">
+                <div class="icon"><i class="fas fa-credit-card"></i></div>
+                <div class="number" id="totalBSCC">0</div>
+                <div class="label">BSCC Courses</div>
+            </div>
+            <div class="stat-card orange">
+                <div class="icon"><i class="fas fa-users"></i></div>
+                <div class="number" id="totalPartners">0</div>
+                <div class="label">Total Partners</div>
+            </div>
+            <div class="stat-card red">
+                <div class="icon"><i class="fas fa-comment"></i></div>
+                <div class="number" id="totalFeedbacks">0</div>
+                <div class="label">Total Feedbacks</div>
+            </div>
+            <div class="stat-card pink">
+                <div class="icon"><i class="fas fa-clock"></i></div>
+                <div class="number" id="pendingFeedbacks">0</div>
+                <div class="label">Pending Feedbacks</div>
+            </div>
+            <div class="stat-card pink">
+                <div class="icon"><i class="fas fa-pen-to-square"></i></div>
+                <div class="number" id="totalAdmissions">0</div>
+                <div class="label">Total Admissions</div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="table-container">
+            <h3>📋 Recent Activity</h3>
+            <div id="recentActivity" style="padding: 16px 0;">
+                <p style="color: #94a3b8;">Loading...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api';
+        const token = localStorage.getItem('adminToken');
+
+        // ===== AUTH CHECK =====
+        if (!token) {
+            window.location.href = 'index.html';
+        }
+
+        // ===== LOGOUT =====
+        function logout() {
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminUser');
+            window.location.href = 'index.html';
+        }
+
+        // ===== LOAD STATS =====
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/stats`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.status === 401) {
+                    localStorage.removeItem('adminToken');
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                const data = await response.json();
+
+                document.getElementById('totalColleges').textContent = data.colleges || 0;
+                document.getElementById('totalCourses').textContent = data.courses || 0;
+                document.getElementById('totalBSCC').textContent = data.bscc || 0;
+                document.getElementById('totalPartners').textContent = data.partners || 0;
+                document.getElementById('totalFeedbacks').textContent = data.feedbacks || 0;
+                document.getElementById('totalAdmissions').textContent = data.admissions || 0;
+                const fbResponse = await fetch(`${API_BASE}/feedbacks/?approved=false`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const fbData = await fbResponse.json();
+                document.getElementById('pendingFeedbacks').textContent = fbData.length || 0;
+
+                loadRecentActivity();
+
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // ===== LOAD RECENT ACTIVITY =====
+        async function loadRecentActivity() {
+            try {
+                const colleges = await fetch(`${API_BASE}/colleges/`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }).then(r => r.json());
+
+                const feedbacks = await fetch(`${API_BASE}/feedbacks/`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }).then(r => r.json());
+
+                const partners = await fetch(`${API_BASE}/partners/`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }).then(r => r.json());
+
+                let activities = [];
+
+                if (colleges.length > 0) {
+                    activities.push(`✅ ${colleges.length} Colleges added`);
+                }
+                if (feedbacks.length > 0) {
+                    const pending = feedbacks.filter(f => !f.approved).length;
+                    activities.push(`💬 ${feedbacks.length} Feedbacks received (${pending} pending)`);
+                }
+                if (partners.length > 0) {
+                    activities.push(`🤝 ${partners.length} Partners registered`);
+                }
+
+                if (activities.length === 0) {
+                    activities.push('📌 No recent activity. Start by adding colleges and courses!');
+                }
+
+                const container = document.getElementById('recentActivity');
+                container.innerHTML = activities.map(activity =>
+                    `<p style="padding: 8px 0; border-bottom: 1px solid #f1f5f9;">${activity}</p>`
+                ).join('');
+
+            } catch (error) {
+                console.error('Error loading activity:', error);
+                document.getElementById('recentActivity').innerHTML = '<p style="color: #94a3b8;">Unable to load activity</p>';
+            }
+        }
+
+        // ===== INIT =====
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = localStorage.getItem('adminUser') || 'Admin';
+            document.getElementById('adminName').textContent = `👋 ${user}`;
+            loadStats();
+        });
+    </script>
+</body>
+
+</html>

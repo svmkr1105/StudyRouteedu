@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partners – StudyRoute Admin</title>
+    <link rel="stylesheet" href="admin.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-content h2 {
+            margin-bottom: 16px;
+        }
+        
+        .modal-content .form-group {
+            margin-bottom: 14px;
+        }
+        
+        .modal-content .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+        }
+        
+        .modal-content .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+        
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #334155;
+        }
+        
+        .btn-secondary:hover {
+            background: #cbd5e1;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            display: block;
+        }
+        
+        .badge-partner {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 2px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        
+        .call-link {
+            color: #2563eb;
+            text-decoration: none;
+        }
+        
+        .call-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="../images/logo.png" alt="StudyRoute" />
+            <h2>StudyRoute</h2>
+        </div>
+        <a href="dashboard.html" class="nav-item">
+            <i class="fas fa-chart-pie"></i> Dashboard
+        </a>
+        <a href="colleges.html" class="nav-item">
+            <i class="fas fa-building-columns"></i> Colleges
+        </a>
+        <a href="courses.html" class="nav-item">
+            <i class="fas fa-book-open"></i> Courses
+        </a>
+        <a href="bscc.html" class="nav-item">
+            <i class="fas fa-credit-card"></i> BSCC Courses
+        </a>
+        <a href="partners.html" class="nav-item active">
+            <i class="fas fa-users"></i> Partners
+        </a>
+        <a href="feedback.html" class="nav-item">
+            <i class="fas fa-comment"></i> Feedback
+        </a>
+        <a href="content.html" class="nav-item">
+            <i class="fas fa-gear"></i> Content
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-key"></i> Change Password
+        </a>
+        <a href="index.html" class="nav-item logout" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-content">
+        <div class="header">
+            <h1>🤝 Partner Management</h1>
+            <div class="user-info">
+                <span id="adminName">Admin</span>
+                <button class="btn btn-primary" onclick="openAddModal()">
+                    <i class="fas fa-plus"></i> Add Partner
+                </button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="table-header">
+                <h3>All Partners</h3>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search partners..." onkeyup="searchPartners()" />
+                </div>
+            </div>
+            <div id="partnersTable">
+                <div class="empty-state">
+                    <i class="fas fa-users"></i>
+                    <p>No partners added yet. Click "Add Partner" to get started!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODAL ===== -->
+    <div class="modal" id="partnerModal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Add Partner</h2>
+            <form id="partnerForm">
+                <input type="hidden" id="editId" />
+                <div class="form-group">
+                    <label>Partner Name *</label>
+                    <input type="text" id="partnerName" required placeholder="e.g. Rajesh Kumar" />
+                </div>
+                <div class="form-group">
+                    <label>Mobile Number *</label>
+                    <input type="tel" id="partnerMobile" required placeholder="e.g. 9876543210" />
+                </div>
+                <div class="form-group">
+                    <label>District *</label>
+                    <input type="text" id="partnerDistrict" required placeholder="e.g. Patna" />
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">💾 Save</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api';
+        const token = localStorage.getItem('adminToken');
+        let partners = [];
+        let editMode = false;
+
+        if (!token) window.location.href = 'index.html';
+
+        function logout() {
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminUser');
+            window.location.href = 'index.html';
+        }
+
+        async function loadPartners() {
+            try {
+                const response = await fetch(`${API_BASE}/partners/`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                partners = await response.json();
+                renderPartners(partners);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function renderPartners(data) {
+            const container = document.getElementById('partnersTable');
+            if (data.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-users"></i>
+                        <p>No partners added yet. Click "Add Partner" to get started!</p>
+                    </div>
+                `;
+                return;
+            }
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Mobile</th>
+                            <th>District</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.map((p, i) => `
+                            <tr>
+                                <td>${i + 1}</td>
+                                <td><strong>${p.name}</strong></td>
+                                <td><a href="tel:${p.mobile}" class="call-link">${p.mobile}</a></td>
+                                <td><span class="badge-partner">${p.district}</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="editPartner('${p.name}')">✏️</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deletePartner('${p.name}')">🗑️</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function searchPartners() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = partners.filter(p => 
+                p.name.toLowerCase().includes(search) ||
+                p.district.toLowerCase().includes(search) ||
+                p.mobile.includes(search)
+            );
+            renderPartners(filtered);
+        }
+
+        function openAddModal() {
+            editMode = false;
+            document.getElementById('modalTitle').textContent = 'Add Partner';
+            document.getElementById('partnerForm').reset();
+            document.getElementById('editId').value = '';
+            document.getElementById('partnerModal').classList.add('show');
+        }
+
+        function editPartner(name) {
+            const partner = partners.find(p => p.name === name);
+            if (!partner) return;
+            editMode = true;
+            document.getElementById('modalTitle').textContent = 'Edit Partner';
+            document.getElementById('editId').value = partner.name;
+            document.getElementById('partnerName').value = partner.name;
+            document.getElementById('partnerMobile').value = partner.mobile || '';
+            document.getElementById('partnerDistrict').value = partner.district || '';
+            document.getElementById('partnerModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('partnerModal').classList.remove('show');
+        }
+
+        document.getElementById('partnerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const name = document.getElementById('partnerName').value.trim();
+            const mobile = document.getElementById('partnerMobile').value.trim();
+            const district = document.getElementById('partnerDistrict').value.trim();
+            const editId = document.getElementById('editId').value;
+
+            if (!name || !mobile || !district) {
+                alert('All fields are required!');
+                return;
+            }
+
+            if (!/^[0-9]{10}$/.test(mobile)) {
+                alert('Please enter a valid 10-digit mobile number');
+                return;
+            }
+
+            const data = { name, mobile, district };
+
+            try {
+                if (editMode) {
+                    await fetch(`${API_BASE}/partners/${encodeURIComponent(editId)}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(data)
+                    });
+                } else {
+                    await fetch(`${API_BASE}/partners/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(data)
+                    });
+                }
+                closeModal();
+                loadPartners();
+            } catch (error) {
+                alert('Error saving partner');
+            }
+        });
+
+        async function deletePartner(name) {
+            if (!confirm(`Delete "${name}"?`)) return;
+            try {
+                await fetch(`${API_BASE}/partners/${encodeURIComponent(name)}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                loadPartners();
+            } catch (error) {
+                alert('Error deleting partner');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = localStorage.getItem('adminUser') || 'Admin';
+            document.getElementById('adminName').textContent = `👋 ${user}`;
+            loadPartners();
+        });
+
+        document.getElementById('partnerModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        window.openAddModal = openAddModal;
+        window.editPartner = editPartner;
+        window.deletePartner = deletePartner;
+        window.searchPartners = searchPartners;
+        window.closeModal = closeModal;
+    </script>
+</body>
+
+</html>

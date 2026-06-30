@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StudyRoute – Education Portal</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+        /* ===== SLIDER / CAROUSEL ===== */
+        /* ===== SLIDER / CAROUSEL ===== */
+        
+        .slider-section {
+            padding: 30px 0 0;
+            background: #f8fafc;
+        }
+        
+        .slider-container {
+            position: relative;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        }
+        
+        .slider-track {
+            display: flex;
+            transition: transform 0.6s ease-in-out;
+            will-change: transform;
+        }
+        
+        .slider-slide {
+            min-width: 100%;
+            position: relative;
+        }
+        
+        .slider-slide img {
+            width: 100%;
+            height: 420px;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+        }
+        /* Overlay */
+        
+        .slider-slide .slide-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 35px 30px;
+            background: linear-gradient( to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.25), transparent);
+            color: #fff;
+        }
+        
+        .slider-slide .slide-overlay h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+        
+        .slider-slide .slide-overlay p {
+            font-size: 1rem;
+            max-width: 600px;
+            opacity: 0.95;
+            margin: 0;
+        }
+        /* Slider Dots */
+        
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 18px 0 25px;
+            background: #f8fafc;
+        }
+        
+        .slider-dots button {
+            width: 12px;
+            height: 12px;
+            border: none;
+            border-radius: 50%;
+            background: #cbd5e1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .slider-dots button.active {
+            width: 30px;
+            border-radius: 20px;
+            background: #2563eb;
+        }
+        
+        .slider-dots button:hover {
+            background: #2563eb;
+        }
+        /* Slider Arrows */
+        
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 45px;
+            height: 45px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            color: #1e293b;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+        
+        .slider-btn:hover {
+            background: #ffffff;
+            transform: translateY(-50%) scale(1.08);
+        }
+        
+        .slider-btn.prev {
+            left: 15px;
+        }
+        
+        .slider-btn.next {
+            right: 15px;
+        }
+        /* Mobile Responsive */
+        
+        @media (max-width: 768px) {
+            .slider-slide img {
+                height: 250px;
+            }
+            .slider-slide .slide-overlay {
+                padding: 20px;
+            }
+            .slider-slide .slide-overlay h2 {
+                font-size: 1.4rem;
+            }
+            .slider-slide .slide-overlay p {
+                font-size: 0.9rem;
+            }
+            .slider-btn {
+                width: 38px;
+                height: 38px;
+                font-size: 1rem;
+            }
+        }
+        /* ===== HERO SECTION (Simplified) ===== */
+        
+        .hero-simple {
+            padding: 50px 0 30px 0;
+            text-align: center;
+            background: white;
+        }
+        
+        .hero-simple h1 {
+            font-size: 2.8rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+        
+        .hero-simple h1 span {
+            color: #2563eb;
+        }
+        
+        .hero-simple p {
+            font-size: 1.1rem;
+            color: #64748b;
+            max-width: 600px;
+            margin: 12px auto 24px;
+        }
+        
+        .hero-simple .hero-buttons {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        /* ===== QUICK NAV (Only once) ===== */
+        
+        .quick-nav {
+            padding: 40px 0;
+            background: #f8fafc;
+        }
+        
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .quick-card {
+            background: white;
+            padding: 24px 16px;
+            border-radius: 14px;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .quick-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+            border-color: #2563eb;
+        }
+        
+        .quick-card .icon {
+            font-size: 2rem;
+            color: #2563eb;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .quick-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .quick-card p {
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+        /* ===== STATS (Only once) ===== */
+        
+        .stats {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            padding: 50px 0;
+            color: white;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 24px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.8rem;
+            font-weight: 900;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+        /* ===== RESPONSIVE ===== */
+        
+        @media (max-width: 768px) {
+            .slider-slide img {
+                height: 280px;
+            }
+            .slider-slide .slide-overlay h2 {
+                font-size: 1.3rem;
+            }
+            .slider-slide .slide-overlay p {
+                font-size: 0.85rem;
+            }
+            .slider-btn {
+                width: 34px;
+                height: 34px;
+                font-size: 0.9rem;
+            }
+            .slider-btn.prev {
+                left: 8px;
+            }
+            .slider-btn.next {
+                right: 8px;
+            }
+            .hero-simple h1 {
+                font-size: 2rem;
+            }
+            .quick-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .slider-slide img {
+                height: 200px;
+            }
+            .slider-slide .slide-overlay {
+                padding: 20px 16px;
+            }
+            .slider-slide .slide-overlay h2 {
+                font-size: 1rem;
+            }
+            .quick-grid {
+                grid-template-columns: 1fr;
+            }
+            .stats-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="nav-brand">
+                <!-- <img src="images/logo.png" alt="StudyRoute" /> -->
+                <img src="images/logo.png" alt="StudyRoute" style="height: 70px; width: auto;" />
+                <span>StudyRoute</span>
+            </a>
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="colleges.html">Colleges</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href="bscc.html">BSCC</a></li>
+                <li><a href="admission.html">Admission</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="feedback.html">Feedback</a></li>
+                <li><a href="admin/index.html" class="nav-admin"><i class="fas fa-user-shield"></i> Admin</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ===== SLIDER / CAROUSEL ===== -->
+    <section class="slider-section">
+        <div class="slider-container">
+            <div class="slider-track" id="sliderTrack">
+                <!-- 🔥 अपनी Images यहाँ Add करें -->
+                <div class="slider-slide">
+                    <img src="images/1 slide.png" alt="StudyRoute Banner 1" />
+                    <div class="slide-overlay">
+                        <h2>Welcome to StudyRoute</h2>
+                        <p>Your trusted partner for college admission and career guidance</p>
+                    </div>
+                </div>
+                <div class="slider-slide">
+                    <img src="images/2 slide.png" alt="BSCC Banner" />
+                    <div class="slide-overlay">
+                        <h2>BSCC Eligible Courses</h2>
+                        <p>Explore courses covered under Bihar Student Credit Card scheme</p>
+                    </div>
+                </div>
+                <div class="slider-slide">
+                    <img src="images/3 Slide.png" alt="College Banner" />
+                    <div class="slide-overlay">
+                        <h2>Find Your Dream College</h2>
+                        <p>Discover top colleges across Bihar with our college directory</p>
+                    </div>
+                </div>
+                <div class="slider-slide">
+                    <img src="images/4 slide.png" alt="Admission Banner" />
+                    <div class="slide-overlay">
+                        <h2>Admission Guidance</h2>
+                        <p>Get expert guidance for your college admission process</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slider Arrows -->
+            <button class="slider-btn prev" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+            <button class="slider-btn next" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+
+        <!-- Slider Dots -->
+        <div class="slider-dots" id="sliderDots"></div>
+    </section>
+
+    <!-- ===== HERO / WELCOME (Simplified) ===== -->
+    <section class="hero-simple">
+        <div class="container">
+            <h1>Discover Your <span>Dream College</span> & Career</h1>
+            <p>StudyRoute helps students explore colleges, courses, BSCC eligible programs, and get expert admission guidance across Bihar.</p>
+            <div class="hero-buttons">
+                <a href="colleges.html" class="btn btn-primary"><i class="fas fa-building-columns"></i> Explore Colleges</a>
+                <a href="courses.html" class="btn btn-secondary"><i class="fas fa-book-open"></i> Explore Courses</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== QUICK NAV (Only Once) ===== -->
+    <section class="quick-nav">
+        <div class="container">
+            <div class="quick-grid">
+                <a href="colleges.html" class="quick-card">
+                    <span class="icon"><i class="fas fa-building-columns"></i></span>
+                    <h3>Colleges</h3>
+                    <p>Find top colleges</p>
+                </a>
+                <a href="courses.html" class="quick-card">
+                    <span class="icon"><i class="fas fa-book-open"></i></span>
+                    <h3>Courses</h3>
+                    <p>Explore programs</p>
+                </a>
+                <a href="bscc.html" class="quick-card">
+                    <span class="icon"><i class="fas fa-credit-card"></i></span>
+                    <h3>BSCC</h3>
+                    <p>Eligible courses</p>
+                </a>
+                <a href="admission.html" class="quick-card">
+                    <span class="icon"><i class="fas fa-pen-to-square"></i></span>
+                    <h3>Admission</h3>
+                    <p>Apply online</p>
+                </a>
+                <a href="contact.html" class="quick-card">
+                    <span class="icon"><i class="fas fa-phone"></i></span>
+                    <h3>Contact</h3>
+                    <p>Get support</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== STATS (Only Once) ===== -->
+    <section class="stats">
+        <div class="container stats-container">
+            <div class="stat-item">
+                <span class="stat-number" data-target="50">0</span>
+                <span class="stat-label">Colleges</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" data-target="40">0</span>
+                <span class="stat-label">Courses</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" data-target="300">0</span>
+                <span class="stat-label">Students Helped</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <img src="images/logo.png" alt="StudyRoute" style="height: 40px;" />
+                    <p>StudyRoute Education Portal helps students discover colleges, courses, and get admission guidance across Bihar.</p>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="colleges.html">Colleges</a></li>
+                        <li><a href="courses.html">Courses</a></li>
+                        <li><a href="bscc.html">BSCC</a></li>
+                        <li><a href="admission.html">Admission</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> +91-9905829292</li>
+                        <li><i class="fas fa-envelope"></i> studyrouteeducation@gmail.com</li>
+                        <li><i class="fas fa-location-dot"></i> Patna, Bihar, India</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 StudyRoute Education Portal. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        // ===== SLIDER FUNCTIONALITY =====
+        const track = document.getElementById('sliderTrack');
+        const slides = track.querySelectorAll('.slider-slide');
+        const dotsContainer = document.getElementById('sliderDots');
+        let currentIndex = 0;
+        let interval;
+
+        // Create dots
+        slides.forEach((_, index) => {
+            const dot = document.createElement('button');
+            dot.addEventListener('click', () => goToSlide(index));
+            dotsContainer.appendChild(dot);
+        });
+
+        const dots = dotsContainer.querySelectorAll('button');
+        dots[0].classList.add('active');
+
+        function goToSlide(index) {
+            currentIndex = index;
+            track.style.transform = `translateX(-${currentIndex * 100}%)`;
+            dots.forEach(d => d.classList.remove('active'));
+            dots[currentIndex].classList.add('active');
+        }
+
+        function nextSlide() {
+            const next = (currentIndex + 1) % slides.length;
+            goToSlide(next);
+        }
+
+        function prevSlide() {
+            const prev = (currentIndex - 1 + slides.length) % slides.length;
+            goToSlide(prev);
+        }
+
+        // Auto-scroll
+        function startAutoScroll() {
+            interval = setInterval(nextSlide, 4000);
+        }
+
+        function stopAutoScroll() {
+            clearInterval(interval);
+        }
+
+        // Event listeners
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            stopAutoScroll();
+            nextSlide();
+            startAutoScroll();
+        });
+
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            stopAutoScroll();
+            prevSlide();
+            startAutoScroll();
+        });
+
+        // Pause on hover
+        const sliderContainer = document.querySelector('.slider-container');
+        sliderContainer.addEventListener('mouseenter', stopAutoScroll);
+        sliderContainer.addEventListener('mouseleave', startAutoScroll);
+
+        // Start
+        startAutoScroll();
+
+        // ===== STATS ANIMATION =====
+        function animateStats() {
+            const counters = document.querySelectorAll('.stat-number');
+            counters.forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-target'));
+                let current = 0;
+                const increment = target / 60;
+                const updateCounter = () => {
+                    current += increment;
+                    if (current < target) {
+                        counter.innerText = Math.ceil(current);
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+                updateCounter();
+            });
+        }
+
+        // ===== LOAD ON PAGE LOAD =====
+        document.addEventListener('DOMContentLoaded', animateStats);
+    </script>
+    <script>
+        const API_BASE = 'http://localhost:8000/api';
+
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/stats`);
+                const data = await response.json();
+
+                document.querySelector('.stat-number[data-target]').textContent = data.colleges || 0;
+                // ... baaki stats
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadStats);
+    </script>
+</body>
+
+</html>

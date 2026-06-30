@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change Password – Admin</title>
+    <link rel="stylesheet" href="admin.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        .form-container {
+            max-width: 500px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+        
+        .btn {
+            padding: 10px 24px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .btn:hover {
+            background: #1d4ed8;
+        }
+        
+        .btn-otp {
+            background: #16a34a;
+        }
+        
+        .btn-otp:hover {
+            background: #15803d;
+        }
+        
+        .btn-resend {
+            background: #64748b;
+        }
+        
+        .btn-resend:hover {
+            background: #475569;
+        }
+        
+        .msg-success {
+            background: #dcfce7;
+            color: #16a34a;
+            padding: 10px 14px;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .msg-error {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 10px 14px;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .msg-success.show,
+        .msg-error.show {
+            display: block;
+        }
+        
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: #0f172a;
+            color: white;
+            padding: 20px;
+            min-height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            overflow-y: auto;
+        }
+        
+        .sidebar .logo {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .sidebar .logo img {
+            height: 50px;
+            background: white;
+            padding: 8px;
+            border-radius: 12px;
+        }
+        
+        .sidebar .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            color: #94a3b8;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 2px;
+        }
+        
+        .sidebar .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+        
+        .sidebar .nav-item.active {
+            background: #2563eb;
+            color: white;
+        }
+        
+        .sidebar .nav-item.logout {
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 16px;
+            color: #ef4444;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            padding: 30px;
+            background: #f1f5f9;
+            min-height: 100vh;
+        }
+        
+        .otp-section {
+            display: none;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .otp-section.show {
+            display: block;
+        }
+        
+        @media (max-width:768px) {
+            .sidebar {
+                width: 200px;
+            }
+            .main-content {
+                margin-left: 200px;
+                padding: 16px;
+            }
+        }
+        
+        @media (max-width:480px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                min-height: auto;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div style="display:flex; min-height:100vh;">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="../images/logo.png" alt="StudyRoute" />
+                <h3 style="color:white; margin-top:8px;">StudyRoute</h3>
+            </div>
+            <a href="dashboard.html" class="nav-item">
+                <i class="fas fa-chart-pie"></i> Dashboard
+            </a>
+            <a href="profile.html" class="nav-item active">
+                <i class="fas fa-key"></i> Change Password
+            </a>
+            <a href="index.html" class="nav-item logout" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="profile-header">
+                <h1>🔐 Change Password</h1>
+                <span style="color:#64748b;">👋 <span id="adminName">Admin</span></span>
+            </div>
+
+            <div class="form-container">
+                <form id="passwordForm">
+                    <div class="form-group">
+                        <label>Current Password</label>
+                        <input type="password" id="currentPassword" required placeholder="Enter current password" />
+                    </div>
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <input type="password" id="newPassword" required minlength="6" placeholder="Enter new password (min 6 chars)" />
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm New Password</label>
+                        <input type="password" id="confirmPassword" required placeholder="Confirm new password" />
+                    </div>
+
+                    <!-- ✅ OTP SECTION (ADDED) -->
+                    <div class="otp-section" id="otpSection">
+                        <div class="form-group">
+                            <label>Enter OTP sent to your email</label>
+                            <input type="text" id="otpInput" placeholder="Enter 6-digit OTP" maxlength="6" />
+                        </div>
+                        <button type="button" class="btn btn-otp" id="verifyOtpBtn">
+                            <i class="fas fa-check"></i> Verify OTP & Change Password
+                        </button>
+                        <button type="button" class="btn btn-resend" id="resendOtpBtn" style="margin-top: 8px;">
+                            <i class="fas fa-redo"></i> Resend OTP
+                        </button>
+                    </div>
+
+                    <button type="button" class="btn" id="changeBtn">
+                        <i class="fas fa-save"></i> Update Password
+                    </button>
+                    <div id="msg" class="msg-error"></div>
+                    <div id="msgSuccess" class="msg-success"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api';
+        const token = localStorage.getItem('adminToken');
+
+        // ===== AUTH CHECK =====
+        if (!token) {
+            window.location.href = 'index.html';
+        }
+
+        function logout() {
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminUser');
+            window.location.href = 'index.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = localStorage.getItem('adminUser') || 'Admin';
+            document.getElementById('adminName').textContent = user;
+        });
+
+        // ===== SEND OTP FIRST =====
+        document.getElementById('changeBtn').addEventListener('click', async function(e) {
+            e.preventDefault();
+
+            const current = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirm = document.getElementById('confirmPassword').value;
+            const msg = document.getElementById('msg');
+            const msgSuccess = document.getElementById('msgSuccess');
+
+            msg.classList.remove('show');
+            msgSuccess.classList.remove('show');
+
+            if (newPass !== confirm) {
+                msg.textContent = '❌ New passwords do not match';
+                msg.className = 'msg-error show';
+                return;
+            }
+            if (newPass.length < 6) {
+                msg.textContent = '❌ Password must be at least 6 characters';
+                msg.className = 'msg-error show';
+                return;
+            }
+
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending OTP...';
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/send-change-otp`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    msgSuccess.textContent = '✅ OTP sent to your email! Enter it below.';
+                    msgSuccess.className = 'msg-success show';
+                    document.getElementById('otpSection').classList.add('show');
+                    document.getElementById('otpInput').focus();
+                } else {
+                    msg.textContent = '❌ ' + (data.detail || 'Failed to send OTP');
+                    msg.className = 'msg-error show';
+                }
+            } catch (error) {
+                msg.textContent = '❌ Server error. Please try again.';
+                msg.className = 'msg-error show';
+            } finally {
+                this.disabled = false;
+                this.innerHTML = '<i class="fas fa-save"></i> Update Password';
+            }
+        });
+
+        // ===== VERIFY OTP & CHANGE PASSWORD =====
+        document.getElementById('verifyOtpBtn').addEventListener('click', async function() {
+            const otp = document.getElementById('otpInput').value.trim();
+            const msg = document.getElementById('msg');
+            const msgSuccess = document.getElementById('msgSuccess');
+
+            msg.classList.remove('show');
+            msgSuccess.classList.remove('show');
+
+            if (!otp || otp.length !== 6) {
+                msg.textContent = '❌ Please enter a valid 6-digit OTP';
+                msg.className = 'msg-error show';
+                return;
+            }
+
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+
+            try {
+                const current = document.getElementById('currentPassword').value;
+                const newPass = document.getElementById('newPassword').value;
+
+                const response = await fetch(`${API_BASE}/admin/change-password`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        currentPassword: current,
+                        newPassword: newPass,
+                        otp: otp
+                    })
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    msgSuccess.textContent = '✅ ' + data.message;
+                    msgSuccess.className = 'msg-success show';
+                    document.getElementById('passwordForm').reset();
+                    document.getElementById('otpSection').classList.remove('show');
+                } else {
+                    msg.textContent = '❌ ' + (data.detail || 'Failed to change password');
+                    msg.className = 'msg-error show';
+                }
+            } catch (error) {
+                msg.textContent = '❌ Server error. Please try again.';
+                msg.className = 'msg-error show';
+            } finally {
+                this.disabled = false;
+                this.innerHTML = '<i class="fas fa-check"></i> Verify OTP & Change Password';
+            }
+        });
+
+        // ===== RESEND OTP =====
+        document.getElementById('resendOtpBtn').addEventListener('click', async function() {
+            const msg = document.getElementById('msg');
+            const msgSuccess = document.getElementById('msgSuccess');
+
+            msg.classList.remove('show');
+            msgSuccess.classList.remove('show');
+
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/send-change-otp`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    msgSuccess.textContent = '✅ New OTP sent to your email!';
+                    msgSuccess.className = 'msg-success show';
+                } else {
+                    msg.textContent = '❌ ' + (data.detail || 'Failed to send OTP');
+                    msg.className = 'msg-error show';
+                }
+            } catch (error) {
+                msg.textContent = '❌ Server error. Please try again.';
+                msg.className = 'msg-error show';
+            } finally {
+                this.disabled = false;
+                this.innerHTML = '<i class="fas fa-redo"></i> Resend OTP';
+            }
+        });
+    </script>
+</body>
+
+</html>

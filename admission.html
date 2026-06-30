@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admission – StudyRoute</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+        .admission-form-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+        }
+        
+        .admission-form-container h2 {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+        
+        .admission-form-container .subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .form-section h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #2563eb;
+            margin-bottom: 16px;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #334155;
+            margin-bottom: 4px;
+        }
+        
+        .form-group label .required {
+            color: #dc2626;
+            margin-left: 2px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            background: #f8fafc;
+            font-family: inherit;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+            background: white;
+        }
+        
+        .form-group input[type="file"] {
+            padding: 8px;
+            background: white;
+            border: 1px dashed #cbd5e1;
+        }
+        
+        .form-group input[type="file"]:hover {
+            border-color: #2563eb;
+        }
+        
+        .form-group .file-size-info {
+            font-size: 0.7rem;
+            margin-top: 2px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        .form-group .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .form-group .checkbox-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #2563eb;
+            cursor: pointer;
+        }
+        
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .btn-submit:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+        }
+        
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-show-form {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 40px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+        }
+        
+        .btn-show-form:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+        }
+        
+        .back-to-info {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        
+        .back-to-info:hover {
+            text-decoration: underline;
+        }
+        
+        #formSection {
+            display: none;
+        }
+        
+        #formSection.active {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .admission-form-container {
+                padding: 20px;
+                margin: 20px;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .btn-show-form {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="nav-brand">
+                <img src="images/logo.png" alt="StudyRoute" style="height: 60px; width: auto;" />
+                <span>StudyRoute</span>
+            </a>
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="colleges.html">Colleges</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href="bscc.html">BSCC</a></li>
+                <li><a href="admission.html" class="active">Admission</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="feedback.html">Feedback</a></li>
+                <li><a href="admin/index.html" class="nav-admin"><i class="fas fa-user-shield"></i> Admin</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Admission Application</h1>
+            <p>Apply for admission to your dream college</p>
+        </div>
+    </section>
+
+    <section class="about-content" id="infoSection">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-text">
+                    <h2>📋 Admission Instructions</h2>
+                    <ul>
+                        <li>Fill the application form with accurate details</li>
+                        <li>Upload required documents in correct sequence</li>
+                        <li>Submit before the deadline</li>
+                        <li>You will receive confirmation via email or WhatsApp</li>
+                    </ul>
+                    <h3>📄 Required Documents (Upload Sequence)</h3>
+                    <ol>
+                        <li><strong>Passport Size Photo</strong> (10-30 KB)</li>
+                        <li><strong>Signature</strong> (10-30 KB)</li>
+                        <li><strong>10th Marksheet</strong> (200-500 KB)</li>
+                        <li><strong>12th Marksheet</strong> (200-500 KB)</li>
+                        <li><strong>Graduation Marksheet</strong> (200-500 KB)</li>
+                        <li><strong>Aadhar Card</strong> (200-500 KB)</li>
+                        <li><strong>Residential Certificate</strong> (200-500 KB)</li>
+                        <li><strong>Caste Certificate</strong> (200-500 KB)</li>
+                    </ol>
+                    <h3>⚠️ Important Notes</h3>
+                    <ul>
+                        <li>All fields with * are mandatory</li>
+                        <li>Upload clear scanned copies</li>
+                        <li>Photo & Signature: 10-30 KB</li>
+                        <li>Other documents: 200-500 KB</li>
+                    </ul>
+                    <button class="btn-show-form" id="applyNowBtn">
+                        <i class="fas fa-pen-to-square"></i> Apply Now
+                    </button>
+                </div>
+                <div class="about-image">
+                    <img src="images/Admissionpage.png" alt="Admission" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="formSection">
+        <div class="container">
+            <div class="admission-form-container">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                    <h2>📝 Admission Application</h2>
+                    <span class="back-to-info" id="hideFormBtn">
+                        <i class="fas fa-arrow-left"></i> Back to Instructions
+                    </span>
+                </div>
+                <p class="subtitle">Please fill all required fields (*)</p>
+
+                <form id="admissionForm" enctype="multipart/form-data">
+
+                    <!-- ===== REFERRAL ===== -->
+                    <div class="form-section">
+                        <h3>📢 How did you hear about us?</h3>
+                        <div class="form-group">
+                            <label>How did you hear about StudyRoute? <span class="required">*</span></label>
+                            <select id="referralSource" required>
+                                <option value="">Select...</option>
+                                <option value="Social Media">Social Media</option>
+                                <option value="Friend/Relative">Friend / Relative</option>
+                                <option value="Website">Website</option>
+                                <option value="StudyRoute Team Member">StudyRoute Team Member</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Referrer Name (if any)</label>
+                            <input type="text" id="referrerName" placeholder="Name of the person who referred you" />
+                        </div>
+                    </div>
+
+                    <!-- ===== PERSONAL ===== -->
+                    <div class="form-section">
+                        <h3>👤 Personal Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Full Name <span class="required">*</span></label>
+                                <input type="text" id="fullName" required placeholder="Enter your full name" />
+                            </div>
+                            <div class="form-group">
+                                <label>Father's Name <span class="required">*</span></label>
+                                <input type="text" id="fatherName" required placeholder="Enter your father's name" />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Mother's Name <span class="required">*</span></label>
+                                <input type="text" id="motherName" required placeholder="Enter your mother's name" />
+                            </div>
+                            <div class="form-group">
+                                <label>Date of Birth <span class="required">*</span></label>
+                                <input type="date" id="dob" required />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Gender <span class="required">*</span></label>
+                                <select id="gender" required>
+                                    <option value="">Select...</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Mobile Number <span class="required">*</span></label>
+                                <input type="tel" id="mobile" required placeholder="10-digit mobile number" />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Alternate Mobile Number</label>
+                                <input type="tel" id="altMobile" placeholder="Alternate mobile number" />
+                            </div>
+                            <div class="form-group">
+                                <label>Email Address <span class="required">*</span></label>
+                                <input type="email" id="email" required placeholder="Enter your email address" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===== ADDRESS ===== -->
+                    <div class="form-section">
+                        <h3>📍 Address Details</h3>
+                        <div class="form-group">
+                            <label>Full Address <span class="required">*</span></label>
+                            <textarea id="address" rows="2" required placeholder="Enter your full address"></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Block <span class="required">*</span></label>
+                                <input type="text" id="block" required placeholder="Enter your block" />
+                            </div>
+                            <div class="form-group">
+                                <label>District <span class="required">*</span></label>
+                                <input type="text" id="district" required placeholder="Enter your district" />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>State <span class="required">*</span></label>
+                                <input type="text" id="state" required placeholder="Enter your state" />
+                            </div>
+                            <div class="form-group">
+                                <label>Pin Code <span class="required">*</span></label>
+                                <input type="text" id="pincode" required placeholder="Enter your pin code" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===== ACADEMIC ===== -->
+                    <div class="form-section">
+                        <h3>📚 Academic Details</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>10th Passing Year <span class="required">*</span></label>
+                                <input type="number" id="tenthYear" required placeholder="e.g. 2020" />
+                            </div>
+                            <div class="form-group">
+                                <label>10th Percentage/CGPA <span class="required">*</span></label>
+                                <input type="text" id="tenthPercent" required placeholder="e.g. 80% or 8.0 CGPA" />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>12th/Diploma Passing Year <span class="required">*</span></label>
+                                <input type="number" id="twelfthYear" required placeholder="e.g. 2022" />
+                            </div>
+                            <div class="form-group">
+                                <label>12th/Diploma Percentage/CGPA <span class="required">*</span></label>
+                                <input type="text" id="twelfthPercent" required placeholder="e.g. 85% or 8.5 CGPA" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>12th/Diploma Stream <span class="required">*</span></label>
+                            <select id="twelfthStream" required>
+                                <option value="">Select...</option>
+                                <option value="Science">Science/Mathematics</option>
+                                <option value="Science">Science/Biology</option>
+                                <option value="Commerce">Commerce</option>
+                                <option value="Arts">Arts</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Graduation Passing Year (for PG admission)</label>
+                                <input type="number" id="gradYear" placeholder="e.g. 2025" />
+                            </div>
+                            <div class="form-group">
+                                <label>Graduation Percentage</label>
+                                <input type="text" id="gradPercent" placeholder="e.g. 75%" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Graduation Stream</label>
+                            <input type="text" id="gradStream" placeholder="e.g. BCA, BBA, B.Sc" />
+                        </div>
+                    </div>
+
+                    <!-- ===== COURSE & COLLEGE ===== -->
+                    <div class="form-section">
+                        <h3>🎯 Course & College Details</h3>
+                        <div class="form-group">
+                            <label>Preferred Course <span class="required">*</span></label>
+                            <input type="text" id="preferredCourse" required placeholder="e.g. Diploma, BCA, BBA, MBA" />
+                        </div>
+                        <div class="form-group">
+                            <label>Preferred College <span class="required">*</span></label>
+                            <input type="text" id="preferredCollege" required placeholder="e.g. Patna University" />
+                        </div>
+                        <div class="form-group">
+                            <label>Interested in BSCC (Bihar Student Credit Card)? <span class="required">*</span></label>
+                            <select id="bsccInterest" required>
+                                <option value="">Select...</option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- ===== DOCUMENTS (Pahle Jaisa Look + Sahi Sequence) ===== -->
+                    <div class="form-section">
+                        <h3>📎 Document Uploads</h3>
+
+                        <!-- ROW 1: PHOTO + SIGNATURE -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Passport Size Photograph <span class="required">*</span></label>
+                                <input type="file" id="photo" accept=".jpg,.jpeg,.png" required />
+                                <div class="file-size-info" style="color: #dc2626;">🖼️ 10-30 KB (JPG, PNG)</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Signature <span class="required">*</span></label>
+                                <input type="file" id="signature" accept=".jpg,.jpeg,.png" required />
+                                <div class="file-size-info" style="color: #dc2626;">✍️ 10-30 KB (JPG, PNG)</div>
+                            </div>
+                        </div>
+
+                        <!-- ROW 2: 10TH + 12TH -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Upload 10th Marksheet <span class="required">*</span></label>
+                                <input type="file" id="tenthMarksheet" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" required />
+                                <div class="file-size-info" style="color: #2563eb;">📄 200-500 KB</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Upload 12th Marksheet <span class="required">*</span></label>
+                                <input type="file" id="twelfthMarksheet" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" required />
+                                <div class="file-size-info" style="color: #2563eb;">📄 200-500 KB</div>
+                            </div>
+                        </div>
+
+                        <!-- ROW 3: GRADUATION + AADHAR -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Graduation Marksheet</label>
+                                <input type="file" id="gradMarksheet" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" />
+                                <div class="file-size-info" style="color: #2563eb;">📄 200-500 KB</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Upload Aadhar Card (Both Sides) <span class="required">*</span></label>
+                                <input type="file" id="aadhar" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" required />
+                                <div class="file-size-info" style="color: #2563eb;">📄 200-500 KB</div>
+                            </div>
+                        </div>
+
+                        <!-- ROW 4: RESIDENTIAL + CASTE -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Upload Residential Certificate</label>
+                                <input type="file" id="residentialCert" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" />
+                                <div class="file-size-info" style="color: #2563eb;">📄 200-500 KB</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Upload Caste Certificate</label>
+                                <input type="file" id="casteCert" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" />
+                                <div class="file-size-info" style="color: #2563eb;">📄 200-500 KB</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===== DECLARATION ===== -->
+                    <div class="form-section">
+                        <h3>📝 Declaration</h3>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="declaration" required />
+                                I hereby declare that all information provided by me is true and correct to the best of my knowledge. <span class="required">*</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-submit" id="submitBtn">
+                        <i class="fas fa-paper-plane"></i> Submit Application
+                    </button>
+                    <div id="formMessage" style="margin-top: 16px; text-align: center;"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <img src="images/logo.png" alt="StudyRoute" style="height: 40px;" />
+                    <p>StudyRoute Education Portal helps students discover colleges, courses, and get admission guidance across Bihar.</p>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="colleges.html">Colleges</a></li>
+                        <li><a href="courses.html">Courses</a></li>
+                        <li><a href="bscc.html">BSCC</a></li>
+                        <li><a href="admission.html">Admission</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> +91-9905829292</li>
+                        <li><i class="fas fa-envelope"></i> studyrouteeducation@gmail.com</li>
+                        <li><i class="fas fa-location-dot"></i> Patna, Bihar, India</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 StudyRoute Education Portal. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        // API_BASE already declared in main.js
+
+        function showForm() {
+            document.getElementById('infoSection').style.display = 'none';
+            document.getElementById('formSection').style.display = 'block';
+            document.getElementById('formSection').classList.add('active');
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        function hideForm() {
+            document.getElementById('infoSection').style.display = 'block';
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('formSection').classList.remove('active');
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        document.getElementById('applyNowBtn').addEventListener('click', showForm);
+        document.getElementById('hideFormBtn').addEventListener('click', hideForm);
+
+        // ===== FILE SIZE VALIDATION =====
+        document.querySelectorAll('input[type="file"]').forEach(input => {
+            input.addEventListener('change', function() {
+                if (this.files && this.files.length > 0) {
+                    const file = this.files[0];
+                    const sizeKB = (file.size / 1024);
+                    const info = this.parentElement.querySelector('.file-size-info');
+                    const isPhotoOrSignature = this.id === 'photo' || this.id === 'signature';
+
+                    let isValid = true;
+                    let msg = '';
+
+                    if (isPhotoOrSignature) {
+                        if (sizeKB < 10) {
+                            isValid = false;
+                            msg = `❌ ${file.name}: ${sizeKB.toFixed(1)} KB (Minimum 10 KB required)`;
+                        } else if (sizeKB > 30) {
+                            isValid = false;
+                            msg = `❌ ${file.name}: ${sizeKB.toFixed(1)} KB (Maximum 30 KB)`;
+                        } else {
+                            msg = `✅ ${file.name}: ${sizeKB.toFixed(1)} KB (OK)`;
+                        }
+                    } else {
+                        if (sizeKB < 200) {
+                            isValid = false;
+                            msg = `❌ ${file.name}: ${sizeKB.toFixed(1)} KB (Minimum 200 KB required)`;
+                        } else if (sizeKB > 500) {
+                            isValid = false;
+                            msg = `❌ ${file.name}: ${sizeKB.toFixed(1)} KB (Maximum 500 KB)`;
+                        } else {
+                            msg = `✅ ${file.name}: ${sizeKB.toFixed(1)} KB (OK)`;
+                        }
+                    }
+
+                    if (info) {
+                        info.style.color = isValid ? '#16a34a' : '#dc2626';
+                        info.textContent = msg;
+                    }
+
+                    if (!isValid) {
+                        this.value = '';
+                    }
+                }
+            });
+        });
+
+        // ===== SUBMIT FORM =====
+        document.getElementById('admissionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const messageDiv = document.getElementById('formMessage');
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+            messageDiv.innerHTML = '';
+
+            try {
+                if (!document.getElementById('declaration').checked) {
+                    messageDiv.innerHTML =
+                        `<div style="background:#fee2e2;color:#dc2626;padding:12px;border-radius:8px;">❌ Please accept the declaration.</div>`;
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Application';
+                    return;
+                }
+
+                const formData = new FormData();
+                const textFields = [
+                    'referralSource', 'referrerName', 'fullName', 'fatherName', 'motherName',
+                    'dob', 'gender', 'mobile', 'altMobile', 'email',
+                    'address', 'block', 'district', 'state', 'pincode',
+                    'tenthYear', 'tenthPercent', 'twelfthYear', 'twelfthPercent', 'twelfthStream',
+                    'gradYear', 'gradPercent', 'gradStream',
+                    'preferredCourse', 'preferredCollege', 'bsccInterest'
+                ];
+                textFields.forEach(field => {
+                    const el = document.getElementById(field);
+                    if (el) formData.append(field, el.value);
+                });
+
+                const fileFields = [
+                    'photo', 'signature',
+                    'tenthMarksheet', 'twelfthMarksheet', 'gradMarksheet',
+                    'aadhar', 'residentialCert', 'casteCert'
+                ];
+                fileFields.forEach(fieldId => {
+                    const fileInput = document.getElementById(fieldId);
+                    if (fileInput && fileInput.files && fileInput.files.length > 0) {
+                        formData.append(fieldId, fileInput.files[0]);
+                    }
+                });
+
+                const response = await fetch(`${API_BASE}/admissions/`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    messageDiv.innerHTML =
+                        `<div style="background:#dcfce7;color:#16a34a;padding:12px;border-radius:8px;">✅ Application submitted successfully! Our team will contact you soon.</div>`;
+                    document.getElementById('admissionForm').reset();
+                    setTimeout(() => hideForm(), 2000);
+                } else {
+                    messageDiv.innerHTML =
+                        `<div style="background:#fee2e2;color:#dc2626;padding:12px;border-radius:8px;">❌ ${data.detail || 'Something went wrong.'}</div>`;
+                }
+            } catch (error) {
+                console.error('Submit error:', error);
+                messageDiv.innerHTML =
+                    `<div style="background:#fee2e2;color:#dc2626;padding:12px;border-radius:8px;">❌ Server error. Please try again later.</div>`;
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Application';
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login – StudyRoute</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+        body {
+            background: linear-gradient(135deg, #f0f4ff, #e0e7ff);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background: white;
+            padding: 48px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .login-container .logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .login-container .logo img {
+            height: 60px;
+        }
+        
+        .login-container h2 {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: #0f172a;
+        }
+        
+        .login-container .subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 32px;
+            font-size: 0.95rem;
+        }
+        
+        .form-group {
+            margin-bottom: 18px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #334155;
+            margin-bottom: 4px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: #f8fafc;
+            box-sizing: border-box;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 8px;
+        }
+        
+        .btn-login:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+        }
+        
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-otp {
+            width: 100%;
+            padding: 14px;
+            background: #16a34a;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 8px;
+        }
+        
+        .btn-otp:hover {
+            background: #15803d;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(22, 163, 74, 0.3);
+        }
+        
+        .btn-otp:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .error-msg {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-top: 12px;
+            display: none;
+        }
+        
+        .error-msg.show {
+            display: block;
+        }
+        
+        .success-msg {
+            background: #dcfce7;
+            color: #16a34a;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-top: 12px;
+            display: none;
+        }
+        
+        .success-msg.show {
+            display: block;
+        }
+        
+        .otp-section {
+            display: none;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .otp-section.show {
+            display: block;
+        }
+        
+        .lock-msg {
+            background: #fef3c7;
+            color: #d97706;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-top: 12px;
+            display: none;
+        }
+        
+        .lock-msg.show {
+            display: block;
+        }
+        
+        .footer-text {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+        
+        .back-link {
+            color: #2563eb;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <img src="../images/logo.png" alt="StudyRoute" />
+        </div>
+        <h2>Admin Login</h2>
+        <p class="subtitle" id="formSubtitle">Enter your credentials to access dashboard</p>
+
+        <!-- Login Fields -->
+        <form id="loginForm">
+            <div id="loginFields">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter username" required autofocus value="admin" />
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter password" required />
+                </div>
+                <button type="submit" class="btn-login" id="loginBtn">
+                    <i class="fas fa-lock"></i> Login
+                </button>
+            </div>
+
+            <!-- OTP Section -->
+            <div class="otp-section" id="otpSection">
+                <p style="font-size:0.9rem; color:#64748b; text-align:center;">
+                    🔐 <strong>Account Locked!</strong><br> An OTP has been sent to your registered email.<br> Please enter it below to unlock your account.
+                </p>
+                <div class="form-group">
+                    <label for="otpInput">Enter OTP</label>
+                    <input type="text" id="otpInput" placeholder="Enter 6-digit OTP" maxlength="6" />
+                </div>
+                <button type="button" class="btn-otp" id="verifyOtpBtn">
+                    <i class="fas fa-check"></i> Verify OTP & Unlock
+                </button>
+                <button type="button" class="btn-login" id="resendOtpBtn" style="background:#64748b; margin-top:8px;">
+                    <i class="fas fa-redo"></i> Resend OTP
+                </button>
+                <p style="text-align:center; margin-top:12px;">
+                    <span class="back-link" onclick="backToLogin()">← Back to Login</span>
+                </p>
+            </div>
+
+            <div id="errorMsg" class="error-msg"></div>
+            <div id="successMsg" class="success-msg"></div>
+            <div id="lockMsg" class="lock-msg"></div>
+        </form>
+
+        <div class="footer-text">
+            <i class="fas fa-shield-alt"></i> Secure Admin Panel
+            <br />
+            <a href="../index.html" style="color: #2563eb; text-decoration: none; font-weight: 600;">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api';
+        let lockedUsername = '';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('adminToken')) {
+                window.location.href = 'dashboard.html';
+            }
+        });
+
+        // ===== LOGIN FORM =====
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorMsg = document.getElementById('errorMsg');
+            const successMsg = document.getElementById('successMsg');
+            const lockMsg = document.getElementById('lockMsg');
+            const loginBtn = document.getElementById('loginBtn');
+
+            errorMsg.classList.remove('show');
+            successMsg.classList.remove('show');
+            lockMsg.classList.remove('show');
+
+            if (!username || !password) {
+                errorMsg.textContent = 'Please fill in all fields';
+                errorMsg.classList.add('show');
+                return;
+            }
+
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+
+            try {
+                const formData = new URLSearchParams();
+                formData.append('username', username);
+                formData.append('password', password);
+
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+                console.log('Login Response:', data);
+
+                if (response.ok) {
+                    localStorage.setItem('adminToken', data.access_token);
+                    localStorage.setItem('adminUser', username);
+
+                    successMsg.textContent = '✅ Login successful! Redirecting...';
+                    successMsg.classList.add('show');
+
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1000);
+                } else if (response.status === 423) {
+                    console.log('🔐 Account locked! Data:', data);
+                    lockedUsername = username;
+
+                    // ✅ SHOW OTP SECTION
+                    document.getElementById('loginFields').style.display = 'none';
+                    document.getElementById('formSubtitle').textContent = '🔐 OTP Verification';
+                    document.getElementById('otpSection').classList.add('show');
+                    document.getElementById('otpSection').style.display = 'block';
+                    document.getElementById('otpInput').focus();
+
+                    lockMsg.textContent = data.detail || 'Account locked. OTP sent to your email.';
+                    lockMsg.classList.add('show');
+                    lockMsg.style.display = 'block';
+
+                    loginBtn.disabled = false;
+                    loginBtn.innerHTML = '<i class="fas fa-lock"></i> Login';
+                } else {
+                    errorMsg.textContent = data.detail || 'Invalid credentials';
+                    errorMsg.classList.add('show');
+                    loginBtn.disabled = false;
+                    loginBtn.innerHTML = '<i class="fas fa-lock"></i> Login';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                errorMsg.textContent = '⚠️ Server error: ' + error.message;
+                errorMsg.classList.add('show');
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fas fa-lock"></i> Login';
+            }
+        });
+
+        // ===== VERIFY OTP =====
+        document.getElementById('verifyOtpBtn').addEventListener('click', async function() {
+            const otp = document.getElementById('otpInput').value.trim();
+            const errorMsg = document.getElementById('errorMsg');
+            const successMsg = document.getElementById('successMsg');
+            const lockMsg = document.getElementById('lockMsg');
+
+            errorMsg.classList.remove('show');
+            successMsg.classList.remove('show');
+            lockMsg.classList.remove('show');
+
+            if (!otp || otp.length !== 6) {
+                errorMsg.textContent = 'Please enter a valid 6-digit OTP';
+                errorMsg.classList.add('show');
+                return;
+            }
+
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+
+            try {
+                const formData = new URLSearchParams();
+                formData.append('username', lockedUsername);
+                formData.append('otp', otp);
+
+                const response = await fetch(`${API_BASE}/auth/verify-otp`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+                console.log('OTP Verify Response:', data);
+
+                if (response.ok) {
+                    successMsg.textContent = '✅ OTP verified! Account unlocked. Please login again.';
+                    successMsg.classList.add('show');
+
+                    setTimeout(() => {
+                        backToLogin();
+                    }, 2000);
+                } else {
+                    errorMsg.textContent = data.detail || 'Invalid OTP';
+                    errorMsg.classList.add('show');
+                }
+            } catch (error) {
+                console.error('OTP error:', error);
+                errorMsg.textContent = '⚠️ Server error: ' + error.message;
+                errorMsg.classList.add('show');
+            } finally {
+                this.disabled = false;
+                this.innerHTML = '<i class="fas fa-check"></i> Verify OTP & Unlock';
+            }
+        });
+
+        // ===== RESEND OTP =====
+        document.getElementById('resendOtpBtn').addEventListener('click', async function() {
+            const errorMsg = document.getElementById('errorMsg');
+            const successMsg = document.getElementById('successMsg');
+
+            errorMsg.classList.remove('show');
+            successMsg.classList.remove('show');
+
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+            try {
+                const formData = new URLSearchParams();
+                formData.append('username', lockedUsername);
+                formData.append('password', 'wrongpassword');
+
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: formData
+                });
+
+                if (response.status === 423) {
+                    const data = await response.json();
+                    successMsg.textContent = '✅ New OTP sent to your email!';
+                    successMsg.classList.add('show');
+                } else {
+                    errorMsg.textContent = 'Failed to resend OTP. Please try again.';
+                    errorMsg.classList.add('show');
+                }
+            } catch (error) {
+                console.error('Resend error:', error);
+                errorMsg.textContent = '⚠️ Server error: ' + error.message;
+                errorMsg.classList.add('show');
+            } finally {
+                this.disabled = false;
+                this.innerHTML = '<i class="fas fa-redo"></i> Resend OTP';
+            }
+        });
+
+        // ===== BACK TO LOGIN =====
+        function backToLogin() {
+            document.getElementById('loginFields').style.display = 'block';
+            document.getElementById('formSubtitle').textContent = 'Enter your credentials to access dashboard';
+            document.getElementById('otpSection').classList.remove('show');
+            document.getElementById('otpInput').value = '';
+            document.getElementById('errorMsg').classList.remove('show');
+            document.getElementById('successMsg').classList.remove('show');
+            document.getElementById('lockMsg').classList.remove('show');
+            lockedUsername = '';
+            document.getElementById('username').focus();
+        }
+    </script>
+</body>
+
+</html>

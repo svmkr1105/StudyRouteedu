@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BSCC Eligible Courses – StudyRoute</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+        /* ===== BSCC Page Specific Styles ===== */
+        
+        .bscc-hero {
+            background: linear-gradient(135deg, #1a56db, #1e40af);
+            padding: 60px 0;
+            color: white;
+            text-align: center;
+        }
+        
+        .bscc-hero h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        
+        .bscc-hero p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .bscc-hero .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+        }
+        
+        .bscc-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .bscc-stat {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        
+        .bscc-stat .number {
+            font-size: 2rem;
+            font-weight: 800;
+            display: block;
+        }
+        
+        .bscc-stat .label {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+        /* Filter Bar */
+        
+        .bscc-filters {
+            background: white;
+            padding: 24px 0;
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 80px;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+        
+        .bscc-filters .filter-bar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .bscc-filters input {
+            padding: 10px 18px;
+            border: 1px solid #e2e8f0;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            min-width: 280px;
+            background: #f8fafc;
+            transition: all 0.3s;
+        }
+        
+        .bscc-filters input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .bscc-filters .btn {
+            padding: 10px 24px;
+        }
+        /* Course Grid - Simple List Style */
+        
+        .bscc-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            padding: 40px 0;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .bscc-card {
+            background: white;
+            border-radius: 10px;
+            padding: 16px 24px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .bscc-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            border-color: #2563eb;
+        }
+        
+        .bscc-card .sr-no {
+            display: inline-block;
+            background: #eff6ff;
+            color: #2563eb;
+            padding: 2px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            min-width: 40px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        
+        .bscc-card h3 {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #0f172a;
+            margin: 0;
+            flex: 1;
+        }
+        /* No results */
+        
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            grid-column: 1 / -1;
+        }
+        
+        .no-results i {
+            font-size: 3rem;
+            color: #cbd5e1;
+            margin-bottom: 16px;
+        }
+        
+        .no-results h3 {
+            font-size: 1.3rem;
+            color: #64748b;
+        }
+        /* Responsive */
+        
+        @media (max-width: 768px) {
+            .bscc-hero h1 {
+                font-size: 2rem;
+            }
+            .bscc-filters input {
+                min-width: 100%;
+            }
+            .bscc-card {
+                flex-wrap: wrap;
+                padding: 14px 18px;
+            }
+            .bscc-card .sr-no {
+                min-width: 32px;
+                font-size: 0.7rem;
+                padding: 1px 8px;
+            }
+            .bscc-card h3 {
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .bscc-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="nav-brand">
+                <img src="images/logo.png" alt="StudyRoute" />
+                <span>StudyRoute</span>
+            </a>
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="colleges.html">Colleges</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href="bscc.html" class="active">BSCC</a></li>
+                <li><a href="admission.html">Admission</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="feedback.html">Feedback</a></li>
+                <li><a href="admin/" class="nav-admin"><i class="fas fa-user-shield"></i> Admin</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ===== BSCC HERO ===== -->
+    <section class="bscc-hero">
+        <div class="container">
+            <div class="badge">🎓 Bihar Student Credit Card</div>
+            <h1>BSCC Eligible Courses</h1>
+            <p>Complete list of courses approved under the Bihar Student Credit Card scheme</p>
+
+            <div class="bscc-stats">
+                <div class="bscc-stat">
+                    <span class="number" id="totalCourses">42</span>
+                    <span class="label">Total Courses</span>
+                </div>
+                <div class="bscc-stat">
+                    <span class="number">50+</span>
+                    <span class="label">Approved Colleges</span>
+                </div>
+                <div class="bscc-stat">
+                    <span class="number">₹4 Lakh</span>
+                    <span class="label">Maximum Loan</span>
+                </div>
+                <div class="bscc-stat">
+                    <span class="number">0%</span>
+                    <span class="label">Interest Rate</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FILTERS ===== -->
+    <section class="bscc-filters">
+        <div class="container">
+            <div class="filter-bar">
+                <input type="text" id="bsccSearch" placeholder="🔍 Search courses by name or number..." />
+                <button onclick="filterCourses()" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Search
+                </button>
+                <button onclick="resetFilters()" class="btn btn-outline">
+                    <i class="fas fa-undo"></i> Reset
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== COURSES LIST ===== -->
+    <section class="directory-list">
+        <div class="container">
+            <div id="bsccGrid" class="bscc-grid"></div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <img src="images/logo.png" alt="StudyRoute" style="height: 40px;" />
+                    <p>StudyRoute Education Portal helps students discover colleges, courses, and get admission guidance across Bihar.</p>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="colleges.html">Colleges</a></li>
+                        <li><a href="courses.html">Courses</a></li>
+                        <li><a href="bscc.html">BSCC</a></li>
+                        <li><a href="admission.html">Admission</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> +91-9905829292</li>
+                        <li><i class="fas fa-envelope"></i> studyrouteeducation@gmail.com</li>
+                        <li><i class="fas fa-location-dot"></i> Patna, Bihar, India</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 StudyRoute Education Portal. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        // ===== BSCC COURSES DATA =====
+        const bsccCourses = [{
+            sr: 1,
+            name: "B.A./ B.Sc./ B. Com. (All subject)"
+        }, {
+            sr: 2,
+            name: "M.A./M.Sc./M.Com (All subject)"
+        }, {
+            sr: 3,
+            name: "Aalim"
+        }, {
+            sr: 4,
+            name: "Shashtri"
+        }, {
+            sr: 5,
+            name: "B.C.A."
+        }, {
+            sr: 6,
+            name: "M.C.A."
+        }, {
+            sr: 7,
+            name: "B.Sc. (Information Technology/Computer Application/Computer Science)"
+        }, {
+            sr: 8,
+            name: "B.Sc. (Agriculture)"
+        }, {
+            sr: 9,
+            name: "B.Sc. (Library Science)"
+        }, {
+            sr: 10,
+            name: "Bachelor of Hotel Management & Catering Technology (B.H.M.C.T.)"
+        }, {
+            sr: 11,
+            name: "B.Tech/B.E. for laterally admitted candidates having degree of three years diploma courses approved by the State Technical Education Council"
+        }, {
+            sr: 12,
+            name: "Hotel Management and Catering Technology"
+        }, {
+            sr: 13,
+            name: "Hospital and Hotel Management"
+        }, {
+            sr: 14,
+            name: "Diploma in Hotel Management (Three Year) (I.H.M. Course)"
+        }, {
+            sr: 15,
+            name: "Bachelor in Yoga (Entry Level+2Pass)"
+        }, {
+            sr: 16,
+            name: "B.Tech/B.E./B.Sc. (Engineering-all branches)"
+        }, {
+            sr: 17,
+            name: "M.B.B.S."
+        }, {
+            sr: 18,
+            name: "B.Sc. (Nursing)"
+        }, {
+            sr: 19,
+            name: "Bachelor of Pharmacy"
+        }, {
+            sr: 20,
+            name: "Bachelor of Veterinary Medicine and Surgery (B.V.M.S.)"
+        }, {
+            sr: 21,
+            name: "Bachelor of Ayurveda, Medicine and Surgery (B.A.M.S)"
+        }, {
+            sr: 22,
+            name: "Bachelor of Unani Medicine & Surgery (B.U.M.S)"
+        }, {
+            sr: 23,
+            name: "Bachelor of Homeopathic Medicine & Surgery (B.H.M.S.)"
+        }, {
+            sr: 24,
+            name: "Bachelor of Dental Surgery (B.D.S.)"
+        }, {
+            sr: 25,
+            name: "General Nursing Midwifery (G.N.M)"
+        }, {
+            sr: 26,
+            name: "Bachelor of Physiotherapy"
+        }, {
+            sr: 27,
+            name: "Bachelor of Occupational Therapy"
+        }, {
+            sr: 28,
+            name: "Diploma in Food, Nutrition/ Dietetics"
+        }, {
+            sr: 29,
+            name: "Bachelor of Mass Communication/Mass Media/Journalism"
+        }, {
+            sr: 30,
+            name: "B.Sc. in Fashion Technology/Designing/Apparel Designing/Footwear Designing"
+        }, {
+            sr: 31,
+            name: "Bachelor of Architecture"
+        }, {
+            sr: 32,
+            name: "Bachelor of Physical Education (B. P. Ed.)"
+        }, {
+            sr: 33,
+            name: "M.Sc/M.Tech Integrated course"
+        }, {
+            sr: 34,
+            name: "Diploma in Food Processing/ Food Production"
+        }, {
+            sr: 35,
+            name: "Diploma in Food & Beverage Services"
+        }, {
+            sr: 36,
+            name: "B.A./B.Sc.-B.Ed. (Integrated Courses)"
+        }, {
+            sr: 37,
+            name: "Bachelor of Business Administration (B.B.A.)"
+        }, {
+            sr: 38,
+            name: "Master of Business Administration (M.B.A.)"
+        }, {
+            sr: 39,
+            name: "Bachelor of Fine Arts (B.F.A.)"
+        }, {
+            sr: 40,
+            name: "BL/LLB (5 Year integrated Course)"
+        }, {
+            sr: 41,
+            name: "Degree/Diploma in Aeronautical, Pilot Training, Shipping"
+        }, {
+            sr: 42,
+            name: "Polytechnic"
+        }];
+
+        // ===== RENDER FUNCTION =====
+        function renderCourses(courses) {
+            const grid = document.getElementById('bsccGrid');
+
+            if (courses.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search"></i>
+                        <h3>No courses found</h3>
+                        <p style="color: #94a3b8;">Try adjusting your search terms</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = courses.map(course => `
+                <div class="bscc-card">
+                    <span class="sr-no">#${course.sr}</span>
+                    <h3>${course.name}</h3>
+                </div>
+            `).join('');
+
+            document.getElementById('totalCourses').textContent = courses.length;
+        }
+
+        // ===== FILTER FUNCTION =====
+        function filterCourses() {
+            const searchTerm = document.getElementById('bsccSearch').value.toLowerCase().trim();
+
+            if (!searchTerm) {
+                renderCourses(bsccCourses);
+                return;
+            }
+
+            const filtered = bsccCourses.filter(course =>
+                course.name.toLowerCase().includes(searchTerm) ||
+                course.sr.toString().includes(searchTerm)
+            );
+
+            renderCourses(filtered);
+        }
+
+        // ===== RESET FUNCTION =====
+        function resetFilters() {
+            document.getElementById('bsccSearch').value = '';
+            renderCourses(bsccCourses);
+        }
+
+        // ===== ENTER KEY SUPPORT =====
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCourses(bsccCourses);
+
+            document.getElementById('bsccSearch').addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    filterCourses();
+                }
+            });
+        });
+
+        // ===== GLOBAL FUNCTIONS =====
+        window.filterCourses = filterCourses;
+        window.resetFilters = resetFilters;
+    </script>
+</body>
+
+</html>

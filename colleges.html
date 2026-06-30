@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Colleges – StudyRoute</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="nav-brand">
+                <img src="images/logo.png" alt="StudyRoute" />
+                <span>StudyRoute</span>
+            </a>
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="colleges.html" class="active">Colleges</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href="bscc.html">BSCC</a></li>
+                <li><a href="admission.html">Admission</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="feedback.html">Feedback</a></li>
+                <li><a href="admin/" class="nav-admin"><i class="fas fa-user-shield"></i> Admin</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ===== PAGE HEADER ===== -->
+    <section class="page-header">
+        <div class="container">
+            <h1>College Directory</h1>
+            <p>Find the best colleges across Bihar</p>
+        </div>
+    </section>
+
+    <!-- ===== FILTERS ===== -->
+    <section class="directory-filters">
+        <div class="container">
+            <div class="filter-bar">
+                <input type="text" id="collegeSearch" placeholder="Search College..." />
+                <select id="districtFilter">
+                    <option value="">All Districts</option>
+                    <option value="Patna">Patna</option>
+                    <option value="Gaya">Gaya</option>
+                    <option value="Muzaffarpur">Muzaffarpur</option>
+                    <option value="Bhagalpur">Bhagalpur</option>
+                    <option value="Darbhanga">Darbhanga</option>
+                </select>
+                <button onclick="loadColleges()" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== COLLEGE GRID ===== -->
+    <section class="directory-list">
+        <div class="container">
+            <div id="collegeGrid" class="college-grid"></div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <img src="images/logo.png" alt="StudyRoute" style="height: 40px;" />
+                    <p>StudyRoute Education Portal helps students discover colleges, courses, and get admission guidance across Bihar.</p>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="colleges.html">Colleges</a></li>
+                        <li><a href="courses.html">Courses</a></li>
+                        <li><a href="bscc.html">BSCC</a></li>
+                        <li><a href="admission.html">Admission</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> +91-9905829292</li>
+                        <li><i class="fas fa-envelope"></i> studyrouteeducation@gmail.com</li>
+                        <li><i class="fas fa-location-dot"></i> Patna, Bihar, India</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 StudyRoute Education Portal. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/colleges.js"></script>
+    <script>
+        const API_BASE = 'http://localhost:8000/api';
+
+        // ===== LOAD COLLEGES =====
+        async function loadColleges() {
+            try {
+                const response = await fetch(`${API_BASE}/colleges/`);
+                const colleges = await response.json();
+                const grid = document.getElementById('collegeGrid');
+
+                if (colleges.length === 0) {
+                    grid.innerHTML = '<p style="text-align:center; padding: 40px; color: #94a3b8;">No colleges found. Add from admin panel.</p>';
+                    return;
+                }
+
+                grid.innerHTML = colleges.map(c => `
+                <div class="college-card">
+                    <h3>${c.name}</h3>
+                    <p><i class="fas fa-location-dot"></i> ${c.district}</p>
+                    <p>${c.description || ''}</p>
+                    <p><strong>Courses:</strong> ${c.courses ? c.courses.join(', ') : 'N/A'}</p>
+                </div>
+            `).join('');
+            } catch (error) {
+                console.error('Error loading colleges:', error);
+                document.getElementById('collegeGrid').innerHTML = '<p style="text-align:center; color: #ef4444;">Error loading colleges</p>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadColleges);
+    </script>
+</body>
+
+</html>

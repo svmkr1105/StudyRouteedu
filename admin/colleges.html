@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colleges – StudyRoute Admin</title>
+    <link rel="stylesheet" href="admin.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-content h2 {
+            margin-bottom: 16px;
+        }
+        
+        .modal-content .form-group {
+            margin-bottom: 14px;
+        }
+        
+        .modal-content .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+        }
+        
+        .modal-content .form-group input,
+        .modal-content .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+        
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #334155;
+        }
+        
+        .btn-secondary:hover {
+            background: #cbd5e1;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="../images/logo.png" alt="StudyRoute" />
+            <h2>StudyRoute</h2>
+        </div>
+        <a href="dashboard.html" class="nav-item">
+            <i class="fas fa-chart-pie"></i> Dashboard
+        </a>
+        <a href="colleges.html" class="nav-item active">
+            <i class="fas fa-building-columns"></i> Colleges
+        </a>
+        <a href="courses.html" class="nav-item">
+            <i class="fas fa-book-open"></i> Courses
+        </a>
+        <a href="bscc.html" class="nav-item">
+            <i class="fas fa-credit-card"></i> BSCC Courses
+        </a>
+        <a href="partners.html" class="nav-item">
+            <i class="fas fa-users"></i> Partners
+        </a>
+        <a href="feedback.html" class="nav-item">
+            <i class="fas fa-comment"></i> Feedback
+        </a>
+        <a href="content.html" class="nav-item">
+            <i class="fas fa-gear"></i> Content
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-key"></i> Change Password
+        </a>
+        <a href="index.html" class="nav-item logout" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-content">
+        <div class="header">
+            <h1>🏛️ College Management</h1>
+            <div class="user-info">
+                <span id="adminName">Admin</span>
+                <button class="btn btn-primary" onclick="openAddModal()">
+                    <i class="fas fa-plus"></i> Add College
+                </button>
+            </div>
+        </div>
+
+        <!-- Search -->
+        <div class="table-container">
+            <div class="table-header">
+                <h3>All Colleges</h3>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search colleges..." onkeyup="searchColleges()" />
+                    <select id="districtFilter" onchange="filterColleges()">
+                        <option value="">All Districts</option>
+                    </select>
+                </div>
+            </div>
+            <div id="collegesTable">
+                <div class="empty-state">
+                    <i class="fas fa-building-columns"></i>
+                    <p>No colleges added yet. Click "Add College" to get started!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODAL ===== -->
+    <div class="modal" id="collegeModal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Add College</h2>
+            <form id="collegeForm">
+                <input type="hidden" id="editId" />
+                <div class="form-group">
+                    <label>College Name *</label>
+                    <input type="text" id="collegeName" required placeholder="e.g. Patna University" />
+                </div>
+                <div class="form-group">
+                    <label>District *</label>
+                    <input type="text" id="collegeDistrict" required placeholder="e.g. Patna" />
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="collegeDescription" rows="3" placeholder="Brief description about the college"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Courses (comma separated)</label>
+                    <input type="text" id="collegeCourses" placeholder="e.g. BCA, BBA, B.Sc" />
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">💾 Save</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api';
+        const token = localStorage.getItem('adminToken');
+        let colleges = [];
+        let editMode = false;
+
+        if (!token) window.location.href = 'index.html';
+
+        function logout() {
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminUser');
+            window.location.href = 'index.html';
+        }
+
+        // ===== LOAD COLLEGES =====
+        async function loadColleges() {
+            try {
+                const response = await fetch(`${API_BASE}/colleges/`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                colleges = await response.json();
+                renderColleges(colleges);
+                populateDistrictFilter();
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // ===== RENDER COLLEGES =====
+        function renderColleges(data) {
+            const container = document.getElementById('collegesTable');
+            if (data.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-building-columns"></i>
+                        <p>No colleges added yet. Click "Add College" to get started!</p>
+                    </div>
+                `;
+                return;
+            }
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>College Name</th>
+                            <th>District</th>
+                            <th>Courses</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.map((c, i) => `
+                            <tr>
+                                <td>${i + 1}</td>
+                                <td><strong>${c.name}</strong></td>
+                                <td><span class="badge">${c.district}</span></td>
+                                <td>${c.courses ? c.courses.join(', ') : 'N/A'}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="editCollege('${c.name}')">✏️</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteCollege('${c.name}')">🗑️</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        // ===== POPULATE DISTRICT FILTER =====
+        function populateDistrictFilter() {
+            const districts = [...new Set(colleges.map(c => c.district))].filter(Boolean);
+            const filter = document.getElementById('districtFilter');
+            const currentValue = filter.value;
+            filter.innerHTML = `<option value="">All Districts</option>`;
+            districts.forEach(d => {
+                filter.innerHTML += `<option value="${d}">${d}</option>`;
+            });
+            filter.value = currentValue;
+        }
+
+        // ===== SEARCH & FILTER =====
+        function searchColleges() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const district = document.getElementById('districtFilter').value;
+            let filtered = colleges;
+            if (search) {
+                filtered = filtered.filter(c => c.name.toLowerCase().includes(search));
+            }
+            if (district) {
+                filtered = filtered.filter(c => c.district === district);
+            }
+            renderColleges(filtered);
+        }
+
+        function filterColleges() {
+            searchColleges();
+        }
+
+        // ===== OPEN ADD MODAL =====
+        function openAddModal() {
+            editMode = false;
+            document.getElementById('modalTitle').textContent = 'Add College';
+            document.getElementById('collegeForm').reset();
+            document.getElementById('editId').value = '';
+            document.getElementById('collegeModal').classList.add('show');
+        }
+
+        // ===== EDIT COLLEGE =====
+        function editCollege(name) {
+            const college = colleges.find(c => c.name === name);
+            if (!college) return;
+            editMode = true;
+            document.getElementById('modalTitle').textContent = 'Edit College';
+            document.getElementById('editId').value = college.name;
+            document.getElementById('collegeName').value = college.name;
+            document.getElementById('collegeDistrict').value = college.district || '';
+            document.getElementById('collegeDescription').value = college.description || '';
+            document.getElementById('collegeCourses').value = college.courses ? college.courses.join(', ') : '';
+            document.getElementById('collegeModal').classList.add('show');
+        }
+
+        // ===== CLOSE MODAL =====
+        function closeModal() {
+            document.getElementById('collegeModal').classList.remove('show');
+        }
+
+        // ===== SAVE COLLEGE =====
+        document.getElementById('collegeForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const name = document.getElementById('collegeName').value.trim();
+            const district = document.getElementById('collegeDistrict').value.trim();
+            const description = document.getElementById('collegeDescription').value.trim();
+            const coursesRaw = document.getElementById('collegeCourses').value.trim();
+            const courses = coursesRaw ? coursesRaw.split(',').map(s => s.trim()) : [];
+            const editId = document.getElementById('editId').value;
+
+            if (!name || !district) {
+                alert('College Name and District are required!');
+                return;
+            }
+
+            const data = { name, district, description, courses };
+
+            try {
+                if (editMode) {
+                    await fetch(`${API_BASE}/colleges/${encodeURIComponent(editId)}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(data)
+                    });
+                } else {
+                    await fetch(`${API_BASE}/colleges/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(data)
+                    });
+                }
+                closeModal();
+                loadColleges();
+            } catch (error) {
+                alert('Error saving college');
+            }
+        });
+
+        // ===== DELETE COLLEGE =====
+        async function deleteCollege(name) {
+            if (!confirm(`Delete "${name}"?`)) return;
+            try {
+                await fetch(`${API_BASE}/colleges/${encodeURIComponent(name)}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                loadColleges();
+            } catch (error) {
+                alert('Error deleting college');
+            }
+        }
+
+        // ===== INIT =====
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = localStorage.getItem('adminUser') || 'Admin';
+            document.getElementById('adminName').textContent = `👋 ${user}`;
+            loadColleges();
+        });
+
+        // Close modal on outside click
+        document.getElementById('collegeModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        window.openAddModal = openAddModal;
+        window.editCollege = editCollege;
+        window.deleteCollege = deleteCollege;
+        window.searchColleges = searchColleges;
+        window.filterColleges = filterColleges;
+        window.closeModal = closeModal;
+    </script>
+</body>
+
+</html>

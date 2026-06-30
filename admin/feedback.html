@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback – StudyRoute Admin</title>
+    <link rel="stylesheet" href="admin.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+        .feedback-card .fb-reply {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--gray-200);
+            display: none;
+        }
+        
+        .feedback-card .fb-reply.show {
+            display: block;
+        }
+        
+        .feedback-card .fb-reply textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            min-height: 60px;
+            margin-bottom: 8px;
+            font-family: inherit;
+        }
+        
+        .feedback-card .fb-reply .btn-send {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .feedback-card .fb-reply .btn-send:hover {
+            background: #1d4ed8;
+        }
+        
+        .filter-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-tabs button {
+            padding: 8px 20px;
+            border: 2px solid var(--gray-200);
+            border-radius: 50px;
+            background: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .filter-tabs button.active {
+            border-color: #2563eb;
+            background: #2563eb;
+            color: white;
+        }
+        
+        .filter-tabs button:hover {
+            border-color: #2563eb;
+        }
+        
+        .reply-text {
+            color: #16a34a;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            padding: 8px 12px;
+            background: #dcfce7;
+            border-radius: 6px;
+        }
+        
+        .fb-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .badge {
+            padding: 2px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge.approved {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+        
+        .badge.pending {
+            background: #fef3c7;
+            color: #d97706;
+        }
+        
+        .feedback-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border-left: 4px solid #94a3b8;
+        }
+        
+        .feedback-card.approved {
+            border-left-color: #16a34a;
+        }
+        
+        .feedback-card.pending {
+            border-left-color: #f59e0b;
+        }
+        
+        .fb-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        
+        .btn-sm {
+            padding: 4px 12px;
+            font-size: 0.75rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .btn-success {
+            background: #16a34a;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #15803d;
+        }
+        
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+        
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="../images/logo.png" alt="StudyRoute" />
+            <h2>StudyRoute</h2>
+        </div>
+        <a href="dashboard.html" class="nav-item">
+            <i class="fas fa-chart-pie"></i> Dashboard
+        </a>
+        <a href="colleges.html" class="nav-item">
+            <i class="fas fa-building-columns"></i> Colleges
+        </a>
+        <a href="courses.html" class="nav-item">
+            <i class="fas fa-book-open"></i> Courses
+        </a>
+        <a href="bscc.html" class="nav-item">
+            <i class="fas fa-credit-card"></i> BSCC Courses
+        </a>
+        <a href="partners.html" class="nav-item">
+            <i class="fas fa-users"></i> Partners
+        </a>
+        <a href="feedback.html" class="nav-item active">
+            <i class="fas fa-comment"></i> Feedback
+        </a>
+        <a href="content.html" class="nav-item">
+            <i class="fas fa-gear"></i> Content
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-key"></i> Change Password
+        </a>
+        <a href="index.html" class="nav-item logout" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-content">
+        <div class="header">
+            <h1>💬 Feedback Management</h1>
+            <div class="user-info">
+                <span id="adminName">Admin</span>
+            </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filter-tabs">
+            <button class="active" data-filter="all" onclick="filterFeedbacks('all')">📋 All</button>
+            <button data-filter="pending" onclick="filterFeedbacks('pending')">⏳ Pending</button>
+            <button data-filter="approved" onclick="filterFeedbacks('approved')">✅ Approved</button>
+        </div>
+
+        <!-- Feedback Grid -->
+        <div class="feedback-grid" id="feedbackGrid">
+            <p style="color: #94a3b8; text-align: center; padding: 40px;">Loading feedbacks...</p>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api';
+        const token = localStorage.getItem('adminToken');
+        let allFeedbacks = [];
+
+        if (!token) window.location.href = 'index.html';
+
+        function logout() {
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminUser');
+            window.location.href = '../index.html';
+        }
+
+        // ===== LOAD FEEDBACKS =====
+        async function loadFeedbacks() {
+            try {
+                const response = await fetch(`${API_BASE}/feedbacks/`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                allFeedbacks = await response.json();
+                renderFeedbacks('all');
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('feedbackGrid').innerHTML =
+                    '<p style="color: #ef4444; text-align: center; padding: 40px;">❌ Unable to load feedbacks</p>';
+            }
+        }
+
+        // ===== RENDER FEEDBACKS =====
+        function renderFeedbacks(filter) {
+            const grid = document.getElementById('feedbackGrid');
+            let filtered = allFeedbacks;
+
+            if (filter === 'pending') {
+                filtered = allFeedbacks.filter(f => !f.approved);
+            } else if (filter === 'approved') {
+                filtered = allFeedbacks.filter(f => f.approved);
+            }
+
+            if (filtered.length === 0) {
+                grid.innerHTML =
+                    '<p style="color: #94a3b8; text-align: center; padding: 40px;">📭 No feedbacks found</p>';
+                return;
+            }
+
+            grid.innerHTML = filtered.map(fb => {
+                        const fbId = fb._id || fb.id || '';
+                        return `
+                        <div class="feedback-card ${fb.approved ? 'approved' : 'pending'}" data-id="${fbId}">
+                            <div class="fb-header">
+                                <h4>${fb.name}</h4>
+                                <span class="badge ${fb.approved ? 'approved' : 'pending'}">
+                                    ${fb.approved ? '✅ Approved' : '⏳ Pending'}
+                                </span>
+                                <span style="font-size: 0.8rem; color: #94a3b8;">${fb.district}</span>
+                            </div>
+                            <div class="fb-rating">${'⭐'.repeat(fb.rating)}</div>
+                            <p class="fb-text">"${fb.message}"</p>
+                            ${fb.reply ? `<div class="reply-text">💬 Admin Reply: ${fb.reply}</div>` : ''}
+                            <div class="fb-actions">
+                                ${!fb.approved ? `<button class="btn-sm btn-success" onclick="approveFeedback('${fbId}')">✅ Approve</button>` : ''}
+                                <button class="btn-sm btn-primary" onclick="toggleReply('${fbId}')">💬 Reply</button>
+                                <button class="btn-sm btn-danger" onclick="deleteFeedback('${fbId}')">🗑️ Delete</button>
+                            </div>
+                            <div class="fb-reply" id="reply-${fbId}">
+                                <textarea id="reply-text-${fbId}" placeholder="Write your reply..."></textarea>
+                                <button class="btn-send" onclick="sendReply('${fbId}')">Send Reply</button>
+                            </div>
+                        </div>
+                    `;
+            }).join('');
+        }
+
+        // ===== FILTER FEEDBACKS =====
+        function filterFeedbacks(filter) {
+            document.querySelectorAll('.filter-tabs button').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.filter-tabs button[data-filter="${filter}"]`).classList.add('active');
+            renderFeedbacks(filter);
+        }
+
+        // ===== APPROVE FEEDBACK =====
+        async function approveFeedback(id) {
+            if (!id || id === 'undefined' || id === '') {
+                alert('❌ Invalid feedback ID. Please refresh the page.');
+                return;
+            }
+            if (!confirm('Approve this feedback?')) return;
+            try {
+                const response = await fetch(`${API_BASE}/feedbacks/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ approved: true })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    alert('✅ Feedback approved!');
+                    loadFeedbacks();
+                } else {
+                    alert('❌ Failed to approve: ' + (data.detail || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error approving feedback');
+            }
+        }
+
+        // ===== DELETE FEEDBACK =====
+        async function deleteFeedback(id) {
+            if (!id || id === 'undefined' || id === '') {
+                alert('❌ Invalid feedback ID. Please refresh the page.');
+                return;
+            }
+            if (!confirm('Delete this feedback?')) return;
+            try {
+                const response = await fetch(`${API_BASE}/feedbacks/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    alert('✅ Feedback deleted!');
+                    loadFeedbacks();
+                } else {
+                    alert('❌ Failed to delete: ' + (data.detail || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error deleting feedback');
+            }
+        }
+
+        // ===== TOGGLE REPLY =====
+        function toggleReply(id) {
+            const replyDiv = document.getElementById(`reply-${id}`);
+            if (replyDiv) {
+                replyDiv.classList.toggle('show');
+            }
+        }
+
+        // ===== SEND REPLY =====
+        async function sendReply(id) {
+            if (!id || id === 'undefined' || id === '') {
+                alert('❌ Invalid feedback ID. Please refresh the page.');
+                return;
+            }
+            const replyText = document.getElementById(`reply-text-${id}`).value.trim();
+            if (!replyText) {
+                alert('Please write a reply first');
+                return;
+            }
+
+            if (!confirm('Send this reply?')) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/feedbacks/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ reply: replyText })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    alert('✅ Reply saved successfully!');
+                    loadFeedbacks();
+                } else {
+                    alert('❌ Failed to save reply: ' + (data.detail || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error sending reply');
+            }
+        }
+
+        // ===== INIT =====
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = localStorage.getItem('adminUser') || 'Admin';
+            document.getElementById('adminName').textContent = `👋 ${user}`;
+            loadFeedbacks();
+        });
+
+        // Make functions global
+        window.filterFeedbacks = filterFeedbacks;
+        window.approveFeedback = approveFeedback;
+        window.deleteFeedback = deleteFeedback;
+        window.toggleReply = toggleReply;
+        window.sendReply = sendReply;
+        window.logout = logout;
+    </script>
+</body>
+
+</html>
