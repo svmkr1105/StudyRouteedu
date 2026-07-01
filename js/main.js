@@ -10,4 +10,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // API Base URL
-const API_BASE = 'https://your-backend-url.onrender.com/api';
+const API_BASE = 'https://studyroute-backend.onrender.com/api';
