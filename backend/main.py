@@ -19,10 +19,23 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import JWTError, jwt  # ✅ FIXED: jwt import add kiya
 from fastapi.responses import FileResponse
 import os
-
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+
+# ===== CORS UPDATED =====
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://studyroute-education-portal.onrender.com",
+        "https://studyroute-portal.onrender.com",
+        "http://localhost:5500",
+        "http://127.0.0.1:5500"
+    ],
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["*"],
+)
 
 # ===== STATIC FILES (Uploads) ===== ✅ ADDED
 UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "uploads")
