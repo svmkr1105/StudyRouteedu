@@ -21,6 +21,10 @@ from fastapi.responses import FileResponse
 import os
 from fastapi.middleware.cors import CORSMiddleware
 
+# ... (baaki sab imports)
+print("✅ Backend starting...")  # 👈 YEH LINE ADD KARO
+
+
 app = FastAPI()
 
 # ===== CORS UPDATED =====
