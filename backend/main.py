@@ -435,7 +435,7 @@ async def get_stats():
         "admissions": db.admissions.count_documents({})
     }
 
-# ===== ADMISSIONS =====
+# ===== ADMISSIONS (FILE SIZE UPDATED) =====
 @app.post("/api/admissions/")
 async def create_admission(
     referralSource: str = Form(...),
@@ -476,6 +476,37 @@ async def create_admission(
     from datetime import datetime
     import os, shutil
     try:
+        # ===== FILE SIZE CHECKS =====
+        # Photo & Signature: 10-50 KB
+        if photo and photo.size > 51200:
+            raise HTTPException(status_code=400, detail="Photo exceeds 50KB limit")
+        if photo and photo.size < 10240:
+            raise HTTPException(status_code=400, detail="Photo is too small (min 10 KB)")
+        if signature and signature.size > 51200:
+            raise HTTPException(status_code=400, detail="Signature exceeds 50KB limit")
+        if signature and signature.size < 10240:
+            raise HTTPException(status_code=400, detail="Signature is too small (min 10 KB)")
+        
+        # Other documents: 100-600 KB
+        docs = [
+            ("10th Marksheet", tenthMarksheet),
+            ("12th Marksheet", twelfthMarksheet),
+            ("Aadhar", aadhar)
+        ]
+        if gradMarksheet:
+            docs.append(("Graduation Marksheet", gradMarksheet))
+        if residentialCert:
+            docs.append(("Residential Certificate", residentialCert))
+        if casteCert:
+            docs.append(("Caste Certificate", casteCert))
+        
+        for name, file in docs:
+            if file and file.size > 614400:
+                raise HTTPException(status_code=400, detail=f"{name} exceeds 600KB limit")
+            if file and file.size < 102400:
+                raise HTTPException(status_code=400, detail=f"{name} is too small (min 100 KB)")
+        
+        # ===== SAVE FILES =====
         upload_dir = os.path.join(os.path.dirname(__file__), "uploads", "admissions")
         os.makedirs(upload_dir, exist_ok=True)
         

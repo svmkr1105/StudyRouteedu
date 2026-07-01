@@ -72,7 +72,7 @@
             border-radius: 8px;
             font-size: 0.95rem;
             transition: all 0.3s;
-            background: #f8fafc;
+            background: #f8afc;
             font-family: inherit;
         }
         
@@ -253,21 +253,21 @@
                     </ul>
                     <h3>📄 Required Documents (Upload Sequence)</h3>
                     <ol>
-                        <li><strong>Passport Size Photo</strong> (10-30 KB)</li>
-                        <li><strong>Signature</strong> (10-30 KB)</li>
-                        <li><strong>10th Marksheet</strong> (200-500 KB)</li>
-                        <li><strong>12th Marksheet</strong> (200-500 KB)</li>
-                        <li><strong>Graduation Marksheet</strong> (200-500 KB)</li>
-                        <li><strong>Aadhar Card</strong> (200-500 KB)</li>
-                        <li><strong>Residential Certificate</strong> (200-500 KB)</li>
-                        <li><strong>Caste Certificate</strong> (200-500 KB)</li>
+                        <li><strong>Passport Size Photo</strong> (10-50 KB)</li>
+                        <li><strong>Signature</strong> (10-50 KB)</li>
+                        <li><strong>10th Marksheet</strong> (100-600 KB)</li>
+                        <li><strong>12th Marksheet</strong> (100-600 KB)</li>
+                        <li><strong>Graduation Marksheet</strong> (100-600 KB)</li>
+                        <li><strong>Aadhar Card</strong> (100-600 KB)</li>
+                        <li><strong>Residential Certificate</strong> (100-600 KB)</li>
+                        <li><strong>Caste Certificate</strong> (100-600 KB)</li>
                     </ol>
                     <h3>⚠️ Important Notes</h3>
                     <ul>
                         <li>All fields with * are mandatory</li>
                         <li>Upload clear scanned copies</li>
-                        <li>Photo & Signature: 10-30 KB</li>
-                        <li>Other documents: 200-500 KB</li>
+                        <li>Photo & Signature: 10-50 KB</li>
+                        <li>Other documents: 100-600 KB</li>
                     </ul>
                     <button class="btn-show-form" id="applyNowBtn">
                         <i class="fas fa-pen-to-square"></i> Apply Now
@@ -472,12 +472,12 @@
                             <div class="form-group">
                                 <label>Passport Size Photograph <span class="required">*</span></label>
                                 <input type="file" id="photo" accept=".jpg,.jpeg,.png" required />
-                                <div class="file-size-info" style="color: #dc2626;">🖼️ 10-30 KB (JPG, PNG)</div>
+                                <div class="file-size-info" style="color: #dc2626;">🖼️ 10-50 KB (JPG, PNG)</div>
                             </div>
                             <div class="form-group">
                                 <label>Signature <span class="required">*</span></label>
                                 <input type="file" id="signature" accept=".jpg,.jpeg,.png" required />
-                                <div class="file-size-info" style="color: #dc2626;">✍️ 10-30 KB (JPG, PNG)</div>
+                                <div class="file-size-info" style="color: #dc2626;">✍️ 10-50 KB (JPG, PNG)</div>
                             </div>
                         </div>
 
@@ -486,12 +486,12 @@
                             <div class="form-group">
                                 <label>Upload 10th Marksheet <span class="required">*</span></label>
                                 <input type="file" id="tenthMarksheet" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" required />
-                                <div class="file-size-info" style="color: #2563eb;">📄 200-500 KB</div>
+                                <div class="file-size-info" style="color: #2563eb;">📄 100-600 KB</div>
                             </div>
                             <div class="form-group">
                                 <label>Upload 12th Marksheet <span class="required">*</span></label>
                                 <input type="file" id="twelfthMarksheet" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" required />
-                                <div class="file-size-info" style="color: #2563eb;">📄 200-500 KB</div>
+                                <div class="file-size-info" style="color: #2563eb;">📄 100-600 KB</div>
                             </div>
                         </div>
 
@@ -500,12 +500,12 @@
                             <div class="form-group">
                                 <label>Graduation Marksheet</label>
                                 <input type="file" id="gradMarksheet" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" />
-                                <div class="file-size-info" style="color: #2563eb;">📄 200-500 KB</div>
+                                <div class="file-size-info" style="color: #2563eb;">📄 100-600 KB</div>
                             </div>
                             <div class="form-group">
                                 <label>Upload Aadhar Card (Both Sides) <span class="required">*</span></label>
                                 <input type="file" id="aadhar" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" required />
-                                <div class="file-size-info" style="color: #2563eb;">📄 200-500 KB</div>
+                                <div class="file-size-info" style="color: #2563eb;">📄 100-600 KB</div>
                             </div>
                         </div>
 
@@ -514,12 +514,12 @@
                             <div class="form-group">
                                 <label>Upload Residential Certificate</label>
                                 <input type="file" id="residentialCert" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" />
-                                <div class="file-size-info" style="color: #2563eb;">📄 200-500 KB</div>
+                                <div class="file-size-info" style="color: #2563eb;">📄 100-600 KB</div>
                             </div>
                             <div class="form-group">
                                 <label>Upload Caste Certificate</label>
                                 <input type="file" id="casteCert" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" />
-                                <div class="file-size-info" style="color: #2563eb;">📄 200-500 KB</div>
+                                <div class="file-size-info" style="color: #2563eb;">📄 100-600 KB</div>
                             </div>
                         </div>
                     </div>
@@ -626,19 +626,19 @@
                         if (sizeKB < 10) {
                             isValid = false;
                             msg = `❌ ${file.name}: ${sizeKB.toFixed(1)} KB (Minimum 10 KB required)`;
-                        } else if (sizeKB > 30) {
+                        } else if (sizeKB > 50) {
                             isValid = false;
-                            msg = `❌ ${file.name}: ${sizeKB.toFixed(1)} KB (Maximum 30 KB)`;
+                            msg = `❌ ${file.name}: ${sizeKB.toFixed(1)} KB (Maximum 50 KB)`;
                         } else {
                             msg = `✅ ${file.name}: ${sizeKB.toFixed(1)} KB (OK)`;
                         }
                     } else {
-                        if (sizeKB < 200) {
+                        if (sizeKB < 100) {
                             isValid = false;
-                            msg = `❌ ${file.name}: ${sizeKB.toFixed(1)} KB (Minimum 200 KB required)`;
-                        } else if (sizeKB > 500) {
+                            msg = `❌ ${file.name}: ${sizeKB.toFixed(1)} KB (Minimum 100 KB required)`;
+                        } else if (sizeKB > 600) {
                             isValid = false;
-                            msg = `❌ ${file.name}: ${sizeKB.toFixed(1)} KB (Maximum 500 KB)`;
+                            msg = `❌ ${file.name}: ${sizeKB.toFixed(1)} KB (Maximum 600 KB)`;
                         } else {
                             msg = `✅ ${file.name}: ${sizeKB.toFixed(1)} KB (OK)`;
                         }
