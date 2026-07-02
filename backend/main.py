@@ -21,10 +21,6 @@ from fastapi.responses import FileResponse
 import os
 from fastapi.middleware.cors import CORSMiddleware
 
-# ... (baaki sab imports)
-print("✅ Backend starting...")  # 👈 YEH LINE ADD KARO
-
-
 app = FastAPI()
 
 # ===== CORS UPDATED =====
@@ -439,7 +435,7 @@ async def get_stats():
         "admissions": db.admissions.count_documents({})
     }
 
-# ===== ADMISSIONS (FILE SIZE UPDATED) =====
+# ===== ADMISSIONS (FILE SIZE FIXED) =====
 @app.post("/api/admissions/")
 async def create_admission(
     referralSource: str = Form(...),
@@ -480,17 +476,26 @@ async def create_admission(
     from datetime import datetime
     import os, shutil
     try:
-        # ===== FILE SIZE CHECKS =====
+        # ===== FILE SIZE CHECKS (FIXED - SEEK METHOD) =====
         # Photo & Signature: 10-50 KB
-        if photo and photo.size > 51200:
-            raise HTTPException(status_code=400, detail="Photo exceeds 50KB limit")
-        if photo and photo.size < 10240:
-            raise HTTPException(status_code=400, detail="Photo is too small (min 10 KB)")
-        if signature and signature.size > 51200:
-            raise HTTPException(status_code=400, detail="Signature exceeds 50KB limit")
-        if signature and signature.size < 10240:
-            raise HTTPException(status_code=400, detail="Signature is too small (min 10 KB)")
-        
+        if photo:
+            photo.file.seek(0, 2)
+            photo_size = photo.file.tell()
+            photo.file.seek(0)
+            if photo_size > 51200:
+                raise HTTPException(status_code=400, detail="Photo exceeds 50KB limit")
+            if photo_size < 10240:
+                raise HTTPException(status_code=400, detail="Photo is too small (min 10 KB)")
+
+        if signature:
+            signature.file.seek(0, 2)
+            sig_size = signature.file.tell()
+            signature.file.seek(0)
+            if sig_size > 51200:
+                raise HTTPException(status_code=400, detail="Signature exceeds 50KB limit")
+            if sig_size < 10240:
+                raise HTTPException(status_code=400, detail="Signature is too small (min 10 KB)")
+
         # Other documents: 100-600 KB
         docs = [
             ("10th Marksheet", tenthMarksheet),
@@ -503,13 +508,17 @@ async def create_admission(
             docs.append(("Residential Certificate", residentialCert))
         if casteCert:
             docs.append(("Caste Certificate", casteCert))
-        
+
         for name, file in docs:
-            if file and file.size > 614400:
-                raise HTTPException(status_code=400, detail=f"{name} exceeds 600KB limit")
-            if file and file.size < 102400:
-                raise HTTPException(status_code=400, detail=f"{name} is too small (min 100 KB)")
-        
+            if file:
+                file.file.seek(0, 2)
+                file_size = file.file.tell()
+                file.file.seek(0)
+                if file_size > 614400:
+                    raise HTTPException(status_code=400, detail=f"{name} exceeds 600KB limit")
+                if file_size < 102400:
+                    raise HTTPException(status_code=400, detail=f"{name} is too small (min 100 KB)")
+
         # ===== SAVE FILES =====
         upload_dir = os.path.join(os.path.dirname(__file__), "uploads", "admissions")
         os.makedirs(upload_dir, exist_ok=True)
