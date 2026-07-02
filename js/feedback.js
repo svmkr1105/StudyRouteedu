@@ -153,9 +153,8 @@
 
 
 
-<
-script >
-    const API_BASE = 'http://localhost:8000/api';
+// ===== API_BASE already declared in main.js =====
+// const API_BASE = 'http://localhost:8000/api';  // 👈 ISE HATAO
 
 // ===== STAR RATING =====
 document.querySelectorAll('.star-rating i').forEach(star => {
@@ -252,4 +251,3 @@ async function loadApprovedFeedbacks() {
         loadApprovedFeedbacks();
         console.log('✅ Feedback page loaded');
     });
-</script>
