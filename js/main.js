@@ -11,5 +11,5 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // API Base URL
 
-const API_BASE = 'http://localhost:8000/api';
-// const API_BASE = 'https://studyroute-backend.onrender.com/api';
+// const API_BASE = 'http://localhost:8000/api';
+const API_BASE = 'https://studyroute-backend.onrender.com/api';
