@@ -29,7 +29,7 @@ app.add_middleware(
     allow_origins=[
         "https://studyrouteeducation.netlify.app",
         "https://studyrouteedu.onrender.com",
-        # "https://studyroute-portal.onrender.com",
+        "https://studyroute-portal.onrender.com",
         "http://localhost:5500",
         "http://127.0.0.1:5500"
     ],
