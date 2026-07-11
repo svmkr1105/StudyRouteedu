@@ -27,7 +27,7 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://studyrouteedu.netlify.app",
+        "https://study-routeedu.vercel.app",
         "https://studyrouteedu.onrender.com",
         "https://studyroute-portal.onrender.com",
         "http://localhost:5500",
